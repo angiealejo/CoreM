@@ -1,0 +1,235 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} CoreM - Ordenes de Trabajo {% endblock title %}
+
+{% block contenido %}
+<body>
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        <span id="titulo">Ordenes de Trabajo</span>
+        <small id="operacion">{{ operation}}</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i>Inicio</a></li>
+        <li><a href="{% url 'trabajos:ordenes_lista' %}">Orden de Trabajo</a></li>
+        <li class="active">{{ operation}}</li>
+      </ol>
+    </section>
+
+    <div class="pad margin no-print">
+      <div class="callout callout-info" style="margin-bottom: 0!important;">
+        <h4><i class="fa fa-info"></i> Nota:</h4>
+        Para imprimir la orden de trabajo haga clic en el botón "Imprimir".
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="invoice">
+      <!-- title row -->
+      <div class="row page-header">
+        
+       <div class="col-xs-4 col-sm-4">
+         
+             <img class="img-responsive" src="{% static 'images/logos/tfs_logo.jpg' %}" alt="Logo TFS">
+
+         
+        </div>
+         <div class="col-xs-4 col-sm-4">
+         
+            <h3 style="text-align:center">ORDEN DE TRABAJO</h3>
+
+         
+        </div>
+         <div class="col-xs-4 col-sm-4">
+         
+            <strong class="pull-right" style="padding-top:10%">No. Orden: {{ orden.pk}}</strong>
+
+         
+        </div>
+        
+      </div>
+      <div class="row invoice-info">
+      	<div class="col-sm-12" align="center">
+      		<h4>{{ orden.equipo.contrato.descripcion | safe }}</h4>
+      	</div>
+      </div>
+      <!-- info row -->
+      <div class="row invoice-info">
+        <div class="col-sm-4 invoice-col">
+          No. De Contrato:
+          <address>
+            <strong>
+            {% if orden.equipo.contrato.numero %}
+              {{ orden.equipo.contrato.numero }}
+            {% else %} 
+              Sin número de contrato registrado
+            {% endif %}
+            </strong><br>
+         
+          </address>
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-4 invoice-col">
+          Región:
+          <address>
+            <strong>
+            {% if orden.equipo.contrato.region %}
+              {{ orden.equipo.contrato.region }}
+            {% else %}
+              Sin región registrada
+            {% endif %}
+            </strong><br>
+          </address>
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-4 invoice-col">
+          Instalación:
+          <address>
+            <strong>Plataforma AE Agosto 12</strong><br>
+          </address>
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="table-responsive">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th style="width:50%">Solicitante del trabajo:</th>
+                  <td>
+                  {% if orden.solicitante %}
+                  {{ orden.solicitante }}
+                  {% else %}
+                  No se ha asignado un solicitante
+                  {% endif %}
+        
+                  </td>
+                </tr>
+                <tr>
+                  <th>Responsable del Trabajo:</th>
+                  <td>{% if orden.responsable %}
+                  {{ orden.responsable }}
+                  {% else %}
+                  No se ha asignado un responsable
+                  {% endif %}
+                  </td>
+                </tr>
+                <tr>
+                  <th>Permiso HSE:</th>
+                  <td>{{ orden.permiso }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="table-responsive">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th style="width:50%">Descripción del trabajo:</th>
+                  <td>{{ orden.descripcion }}</td>
+                </tr>
+                <tr>
+                  <th>Especialidad:</th>
+                  <td>{% if orden.especialidad %}
+                    {{ orden.get_especialidad_display }}
+                    {% else %}
+                    Sin especialidad registrada
+                    {% endif %}
+                  </td>
+                </tr> 
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Table row -->
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <tbody>
+                <tr>
+                  <th style="width:30%">Tipo de OT:</th>
+                  <td>{{ orden.get_tipo_display }}</td>
+                </tr>
+                <tr>
+                  <th style="width:30%">Fecha Inicio:</th>
+                  <td>{% if orden.fecha_estimada_inicio %}{{ orden.fecha_estimada_inicio | date:"d - M - Y" }} {%else %}No existe fecha registrada{% endif %}</td>
+                </tr>
+                <tr>
+                  <th style="width:30%">Fecha Termino:</th>
+                  <td>{% if orden.fecha_estimada_fin %}{{ orden.fecha_estimada_fin | date:"d - M - Y" }}{% else %}No existe fecha registrada{% endif %}</td>
+                </tr>
+                <tr>
+                  <th style"width:30%">Horas Hombre Estimadas:</th>
+                  <td>{{ horas_hombre }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <tbody>
+                <tr>
+                  <th style="width:30%">Sistema:</th>
+                  <td>{% if orden.equipo.padre %} {{ orden.equipo.padre }} {% endif %}</td>
+                </tr>
+                <tr>
+                  <!--
+                  <th style="width:30%">Subsistema:</th>
+                  <td>{% if subsistema %} {{ subsistema }} {% endif %}</td>
+                </tr>
+                <tr>
+                  <th style="width:30%">Subsistema Nivel 1:</th>
+                  <td>{% if subsistema_nivel_uno %} {{ subsistema_nivel_uno }} {% endif %}</td>
+                </tr>
+                -->
+                <tr>
+                  <th style="width:30%">Item Mantenible:</th>
+                  <td>{{ orden.equipo }}</td>
+                </tr>
+                <tr>
+                  <th style="width:30%">Personal Involucrado:</th>
+                  <td>
+                  {% for persona in personal %}
+                  <p> {{ persona.empleado.profile.puesto }}: {{ persona.empleado.profile }}</p>
+                  {% endfor %}
+
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+     </div>
+     <div class="row no-print">
+        <div class="col-xs-12">
+          <button class="btn btn-default" id="boton_imprimir"> <i class="fa fa-print"></i> Imprimir</button>
+        </div>
+      </div>
+      <!-- /.row -->
+
+      <!-- this row will not appear when printing -->
+      
+    </section>
+    <!-- /.content -->
+    <div class="clearfix"></div>
+   </body>
+{% endblock %}
+
+{% block scripts %}
+
+  <!-- CoreM -->
+  <script src="{% static 'orden_trabajo/reporte/preview.js' %}"></script>
+
+{% endblock %}

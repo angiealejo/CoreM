@@ -1,0 +1,188 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} Actividades de Orden de Trabajo {% endblock title %}
+
+{% block css %}
+
+	<!-- Kendo -->
+	<link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.rtl.min.css' %}"/>
+	<link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.common-bootstrap.min.css' %}"/>
+	<link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.bootstrap.min.css' %}"/>
+
+	<!-- CoreM -->
+	<link rel="stylesheet" href="{% static 'grid.css' %}"/>
+
+{% endblock css %}	
+
+
+{% block contenido %}
+
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+	  <h1>
+	    <span id="titulo">Ordenes de Trabajo</span>
+	    <small>Actividades</small>
+	  </h1>
+	  <ol class="breadcrumb">
+	    <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i>Inicio</a></li>
+	    <li><a href="{% url 'trabajos:ordenes_lista' %}">Ordenes</a></li>
+	    <li class="active">Actividades</li>
+	  </ol>
+	</section>
+
+	<!-- Main content -->
+	<section class="content" id="contenido">
+
+		<div class="row">
+			<form role="form" action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+
+				<div class="col-md-12">
+					
+					<div class="nav-tabs-custom">
+						<ul class="nav nav-tabs pull-right">						
+							<li><a id="tab_servicios" href="{% url 'trabajos:servicio_externo_lista' orden.id %}">Servicios</a></li>
+							<li><a id="tab_mano_obra" href="{% url 'trabajos:mano_obra_lista' orden.id %}">Mano Obra</a></li>
+							<li><a id="tab_materiales" href="{% url 'trabajos:material_lista' orden.id %}">Materiales</a></li>
+							<li class="active">
+								<a id="tab_actividades" href="#">Actividades</a>
+							</li>
+							<li><a href="{% url 'trabajos:ordenes_editar' orden.id %}">Generales</a></li>
+<!-- 							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+									Reportes 
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Imprimir OT</a></li>
+									<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Imprimir Reporte de Mantenimiento</a></li>
+								</ul>
+							</li>	 -->					
+							<li class="pull-left header"><i class="fa fa-th"></i> No. Orden: <strong id="ot_clave">{{ orden.id }}</strong> - <strong>{{ orden.descripcion }}</strong></li>
+						</ul>
+						<div class="tab-content">
+							<input class="hidden" type="text" id="id_permiso" value="{{ permiso }}">
+							<div class="tab-pane active">
+
+
+								<div class="box box-info">
+									<div class="box-header box-header-border">
+										<h3 class="box-title">Registros</h3>
+										<div class="box-tools pull-right">
+
+											<a href="#win_modal" class="btn bg-purple btn-sm" data-toggle="modal" id="boton_nuevo">
+												<i class="fa fa-plus-circle"></i>
+												Nuevo
+											</a>
+
+										</div>
+									</div>
+									<div id="grid_principal">
+									</div>
+								</div>	
+
+
+							</div>
+							<!-- /.tab-pane -->
+						</div> <!-- /.tab-content -->
+							
+					</div> <!-- nav-tabs-custom -->
+				</div>
+
+			</form>
+		</div>
+
+		<!-- win_modal -->
+		<div class="modal fade" tabindex="-1" role="dialog" id="win_modal">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title"></h4>
+		      </div>
+		      <div class="modal-body">
+					<div class="row">
+
+						<input class="hidden" id="id_actividad" type="text" />
+
+						<!-- Nombre -->
+						<div class="col-sm-4">
+							<div class="form-group has-warning" id="act_numero_contenedor">
+								<label for="act_numero">
+									<i class="fa  fa-asterisk  "></i>
+									Numero:
+								</label>
+								<input class="form-control input-sm" id="act_numero" maxlength="144" type="number" />
+								<span class="help-block hidden" id="act_numero_mensaje">Este campo es requerido.</span>
+							</div>
+						</div>
+
+						<!-- Descripcion -->
+						<div class="col-sm-8">
+							<div class="form-group has-warning" id="act_desc_contenedor">
+								<label for="act_desc">
+									<i class="fa fa-asterisk"></i>
+									Descripcion:
+								</label>
+								<input class="form-control input-sm" id="act_desc" maxlength="144" type="text" />
+								<span class="help-block hidden" id="act_desc_mensaje">Este campo es requerido.</span>
+							</div>
+						</div>						
+					</div>
+			
+					<div class="row">
+
+						<!-- Horas Estimadas -->
+						<div class="col-sm-6">
+							<div class="form-group has-warning" id="act_hrs_est_contenedor">
+								<label for="act_hrs_est">
+									<i class="fa fa-asterisk"></i>
+									Horas Estimadas:
+								</label>
+								<input class="form-control input-sm" id="act_hrs_est" maxlength="144" type="number" />
+								<span class="help-block hidden" id="act_hrs_est_mensaje">Este campo es requerido.</span>
+							</div>
+						</div>
+
+						<!-- Horas Reales -->
+						<div class="col-sm-6">
+							<div class="form-group" id="act_hrs_real_contenedor">
+								<label for="act_hrs_real">
+									Horas Reales:
+								</label>
+								<input class="form-control input-sm" id="act_hrs_real" maxlength="144" type="number" />
+								<span class="help-block hidden" id="act_hrs_real_mensaje">Este campo es requerido.</span>
+							</div>
+						</div>	
+					</div>
+
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+		        	<i class="fa fa-close"></i>
+		        	Cerrar
+		        </button>
+		        <button type="button" class="btn btn-success" id="btn_modal_save">
+		        	<i class="fa fa-save"></i>
+		        	Guardar
+		        </button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+	</section>
+	<!-- /. Main content -->
+
+{% endblock contenido %}
+
+{% block scripts %}
+
+	<!-- Kendo Js -->
+	<script src="{% static 'libs/kendo/2015.2.624/js/cultures/kendo.culture.es-MX.min.js' %}"></script>
+	<script src="{% static 'libs/kendo/2015.2.624/js/kendo.web.min.js' %}"></script>
+
+	<!-- CoreM -->
+	<script src="{% static 'actividad/lista.js' %}"></script>
+
+{% endblock scripts %}

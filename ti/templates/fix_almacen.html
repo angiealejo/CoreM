@@ -1,0 +1,53 @@
+
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} CoreM - Almacenes {% endblock title %}
+
+
+
+{% block contenido %}
+
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      <span id="titulo">Fix</span>
+      <small>Almacen</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i> Inicio</a></li>
+      <li class="active">Fix Almacen</li>
+    </ol>
+  </section>
+
+  <section class="content" id="contenido">
+    {% if registros %}
+
+      {% for r in registros %}
+      <ul class="list-group">
+        <li class="list-group-item">{{r.descripcion}}</li>
+      </ul>    
+      {% endfor %}
+
+    {% else %}
+
+      <h1>No hay registros sin stock en tierra</h1>
+
+    {% endif %}
+
+      <form action="" method="POST">
+        
+         <input type="submit" value="Agregar Stock" class="btn btn-danger">
+      </form>
+  </section>
+  <!-- /. Main content -->    
+
+{% endblock contenido %}
+
+
+{% block scripts %}
+
+
+
+{% endblock scripts %}

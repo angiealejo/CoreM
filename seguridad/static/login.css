@@ -1,0 +1,30 @@
+.alert--center {
+    text-align: center;
+}
+
+body {
+    background: white url(images/fondos/background.jpg) !important;
+    background-attachment:fixed !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+}
+
+.app-login-box {
+
+    margin-top: 14% !important;
+    margin-left: 3% !important;
+}
+
+.app-login-logo {
+    font-size: 45px;
+    margin-bottom: 2px;
+}
+
+.app-login-body {
+
+	border-radius: 12px !important;
+}
+
+	.app-login-title {
+		color: white;
+	}

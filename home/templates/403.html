@@ -1,0 +1,31 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} CoreM - Error 403 {% endblock title %}
+
+
+
+{% block contenido %}
+
+<section class="content">
+      <div class="error-page">
+        <h2 class="headline text-blue"> 403</h2>
+
+        <div class="error-content">
+          <br>
+          <br>
+          <h3><i class="fa fa-warning text-yellow"></i> Acceso Denegado</h3>
+
+          <p>
+            No cuenta con los permisos para realizar esta acción.
+          </p>
+        </div>
+        <!-- /.error-content -->
+      </div>
+      <!-- /.error-page -->
+    </section>
+
+
+{% endblock contenido %}
+

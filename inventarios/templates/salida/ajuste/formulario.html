@@ -1,0 +1,262 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} CoreM - Salida por Ajuste {% endblock title %}
+
+{% block css %}
+
+	<!-- Kendo -->
+	<link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.rtl.min.css' %}"/>
+	<link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.common-bootstrap.min.css' %}"/>
+	<link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.bootstrap.min.css' %}"/>
+
+	<!-- Select2 -->
+	<link rel="stylesheet" href="{% static 'theme/plugins/select2/select2.min.css' %}"/>
+
+	<!-- bootstrap datepicker -->
+	<link rel="stylesheet" href="{% static 'theme/plugins/datepicker/datepicker3.css' %}">
+
+	<!-- CoreM -->
+	<link rel="stylesheet" href="{% static 'grid.css' %}"/>
+
+{% endblock css %}
+
+{% block contenido %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+	<span id="titulo">Salidas: Ajustes</span>
+	<small id="operacion">{{ operation }}</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i> Inicio</a></li>
+		<li><a href="{% url 'inventarios:salidas_ajustes_lista' %}">Salidas por Ajuste</a></li>
+		<li class="active">{{ operation }}</li>
+
+	</ol>
+</section>
+<!-- Main content -->
+<section class="content" id="contenido">
+	<div class="row">
+		<div class="col-md-12">
+			{% if errores %}
+				
+				<div class="alert alert-danger alert-dismissible">
+	                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	                <h4><i class="icon fa fa-warning"></i> Error</h4>
+	               	
+	               	<span> 
+	               	{% for error in errores %}
+					<br><i class="fa fa-minus"></i> {{ error }}
+					{% endfor %}
+	               	</span>
+             	</div>
+             	
+             {% endif %}
+			<!-- Formulario -->
+			<div class="box box-solid box-primary" id="id_panel">
+				<div class="box-header with-border">
+					<h3 class="box-title">Salida: <strong>{{ id_cabecera }}</strong></h3>
+					{% if estado_cabecera %}
+						<span id="estado_cabecera" class="label {% if estado_cabecera == "CERRADO" %} label-default {% endif %} {% if estado_cabecera == "CAPTURA" %} label-success {% endif %} app-documento-estado">
+						{{ estado_cabecera }}
+						</span>
+					{% endif %}
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+					</div>
+				</div>
+				<!-- /.box-header -->
+				<input type="hidden" id="id_estado" value="{{ estado_cabecera }}">
+				<form role="form" action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+					<div class="box-body">
+						{% if id_cabecera %}
+						<input type="hidden" id="id_cabecera" value="{{ id_cabecera }}" name="id_cabecera">
+						{% else %}
+						<input type="hidden" id="id_tipo" name="tipo" value="SAL">
+						{% endif %}
+						<div class="row">
+							<div class="form-group col-sx-12 col-sm-4 col-md-4 {% if form.descripcion.field.required %} has-warning {% endif %} {% if form.descripcion.errors %} has-error {% endif %}">
+								<label for="{{ form.descripcion.id_for_label }}">
+								<i class="fa {% if form.descripcion.field.required %} fa-asterisk {% endif %} "></i>
+								Descripción</label>
+								{{ form.descripcion }}
+								{% for error in form.descripcion.errors %}
+								<span class="help-block">{{ error }}</span>
+								{% endfor %}
+							</div>
+							<div class="form-group col-sx-12 col-sm-4 col-md-4 {% if form.fecha.field.required %} has-warning {% endif %} {% if form.fecha.errors %} has-error {% endif %} ">
+								<label for="{{ form.fecha.id_for_label}}">
+								<i class="fa {% if form.fecha.field.required %} fa-asterisk {% endif %}"></i>
+								Fecha</label>
+								<div class="form-group input-group">
+					            	<div class="input-group-addon">
+					                	<i class="fa fa-calendar"></i>
+					            	</div>
+					                {{ form.fecha }}
+					            </div>
+					            {% for error in form.fecha.errors %}
+								    <span class="help-block">{{ error }}</span>
+									{% endfor %}						
+					        </div>
+							<div class="form-group col-sx-12 col-sm-4 col-md-4 {% if form.almacen_origen.field.required %} has-warning {% endif %} {% if form.almacen_origen.errors %} has-error {% endif %}">
+								<label for="{{ form.almacen_origen.id_for_label }} select2--fix">
+								<i class="fa {% if form.almacen_origen.field.required %} fa-asterisk {% endif %}"></i>
+								Almacén Origen</label>
+								{{ form.almacen_origen }}
+								{% for error in form.almacen_origen.errors %}
+								<span class="help-block">{{ error }}</span>
+								{% endfor %}
+								
+							</div>
+						</div>
+						{% if created_by %}
+							<div class="row">
+								<div class="form-group col-sx-12 col-sm-12 col-md-12">
+									<div class="products-list product-list-in-box">
+										<div class="product-img item-foto">
+												{% if created_by.imagen %}
+													<img class="img-circle" src="{{ MEDIA_URL }}{{ created_by.imagen }}" alt="User Image">
+												{% else %}
+													<img class="img-circle img-responsive img-thumbnail" src="{% static 'images/decoradores/no-image-user.jpg' %}" alt="User Image">
+												{% endif %}
+										</div>
+									</div>
+									<div style="padding-top:25px">
+										<span>Creado por: <strong>{{ created_by.user.get_full_name }}</strong> el día <strong>{{ created_date }}</strong> </span>
+									</div>
+									
+								</div>
+							</div>
+							{% endif %}
+					</div>
+					<!-- /.box-body -->
+					<div class="box-footer">
+						<a class="btn btn-default" href="{% url 'inventarios:salidas_ajustes_lista' %}">
+							<i class="fa fa-arrow-circle-left"></i>
+							Regresar
+						</a>
+						<button type="submit" id="boton_guardar" class="btn btn-success pull-right" name="guardar" value="guardar">
+							<i class="fa fa-save"></i>
+							{% if id_cabecera %} Actualizar {% else %} Guardar {% endif %}
+						</button>
+					</div>
+			</div>
+			<!-- /.box -->
+			{% if id_cabecera %}
+			
+			<div class="box box-info">
+				<div class="box-header box-header-border">
+					<h3 class="box-title">Detalle</h3>
+					<div class="box-tools pull-right">
+						
+						<button type="button" id="boton_nuevo" class="btn bg-purple btn-sm">
+						<i class="fa fa-plus-circle"></i>
+						Nuevo
+						</button>
+						<button type="button" id="boton_exportar" class="btn bg-olive btn-sm">
+						<i class="fa fa-file-excel-o"></i>
+						Exportar
+						</button>
+						
+					</div>
+				</div>
+				<div id="grid_principal">
+				</div>
+			</div>
+			<div>
+				{% if estado_cabecera != "CERRADO" %}
+					<button type="submit" id="boton_finalizar" class="btn btn-warning btn-sm" name="finalizar" value="finalizar">
+						<i class="fa fa-save"></i>
+						Finalizar
+					</button>
+				{% endif %}
+			</div>
+			{% endif %}
+			</form>
+			
+            <!-- /.box-body -->
+          </div>
+			<!-- /.box -->
+		</div>
+
+	<div class="modal fade" id="modal_nuevo" role="dialog">
+		<div class="modal-dialog modal-default">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                <span aria-hidden="true"></span></button>
+	                <h4 class="modal-title">Agregar Articulo</h4>
+	            </div>
+	            
+	            <div class="modal-body">
+	            	<input type="hidden" id="cabecera" value="{{ id_cabecera }}" name="cabecera">
+					<div class="row">
+						<div id="articulo_contenedor" class="form-group select2--fix col-sx-12 col-sm-12 col-md-12 has-warning">
+							<label for="articulo">
+							<i class="fa fa-asterisk"></i>
+							Articulo</label>
+							
+							<select name="articulo" id="id_articulo" class="form-control"></select>
+							
+							<span class="help-block hidden" id="articulo_mensaje">Este campo es requerido.</span>			
+					    </div>
+					</div>
+					<div class="row">
+						<div id="cantidad_contenedor" class="form-group col-sx-12 col-sm-12 col-md-12 has-warning">
+							<label for="cantidad">
+							<i class="fa fa-asterisk"></i>
+							Cantidad</label>
+							<input type="number" class="form-control" name="cantidad" id="id_cantidad">
+							<span class="help-block hidden" id="cantidad_mensaje">Este campo es requerido.</span>
+						</div>
+					</div>
+	            </div>
+
+	            <div class="modal-footer">
+		            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+		            	<i class="fa fa-close"></i>
+		            	Cerrar
+		            </button>
+		            <button type="button" id="boton_guardar_detalle" class="btn btn-success">
+		            	<i class="fa fa-save"></i>
+		            	Guardar
+		            </button>
+	            </div>
+	        </div>
+	            <!-- /.modal-content -->
+	    </div>
+	</div>
+</section>
+<!-- /. Main content -->
+{% endblock contenido %}
+
+{% block scripts %}
+
+	<!--JSZIP -->
+	<script src="{% static 'libs/kendo/2015.2.624/js/jszip.min.js' %}"></script>
+
+	<!-- Kendo Js -->
+	<script src="{% static 'libs/kendo/2015.2.624/js/cultures/kendo.culture.es-MX.min.js' %}"></script>
+	<script src="{% static 'libs/kendo/2015.2.624/js/kendo.web.min.js' %}"></script>
+
+	<!-- Select2 -->
+	<script src="{% static 'theme/plugins/select2/select2.full.min.js' %}"></script>
+
+	<!-- InputMask -->
+	<script src="{% static 'theme/plugins/input-mask/jquery.inputmask.js' %}"></script>
+	<script src="{% static 'theme/plugins/input-mask/jquery.inputmask.date.extensions.js' %}"></script>
+	<script src="{% static 'theme/plugins/input-mask/jquery.inputmask.extensions.js' %}"></script>
+
+	<!-- bootstrap datepicker -->
+	<script src="{% static 'theme/plugins/datepicker/bootstrap-datepicker.js' %}"></script>
+	<script src="{% static 'theme/plugins/datepicker/locales/bootstrap-datepicker.es.js' %}"></script>
+	
+	<!-- Moment -->
+	<script src="{% static 'libs/moment.js/2.11.2/moment.min.js' %}"></script>
+	
+	<!-- CoreM -->
+	<script src="{% static 'salida/ajuste/formulario.js' %}"></script>
+
+{% endblock scripts %}

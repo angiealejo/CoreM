@@ -1,0 +1,101 @@
+.btn {
+	font-family: Helvetica Neue, sans-serif !important;
+}
+
+.form-group label {
+	font-family: Helvetica Neue, sans-serif !important;
+	font-size: 12px;
+}
+
+
+.form-group .form-control {
+	font-family: Helvetica Neue, sans-serif !important;
+	/* font-size: 14px !important; */
+}
+
+.box-title {
+	font-size: 16px !important;
+}
+
+.app-image {
+	height: 400px;
+	width: 400px;
+}
+
+.box--table {
+	border-left: 1px solid #C1C1C1 !important;
+	border-right: 1px solid #C1C1C1 !important;
+	border-bottom: 1px solid #C1C1C1 !important;
+
+	border-radius: 0 0 3px 3px;	
+}
+
+.box-header-border {
+
+	border-left: 1px solid #C1C1C1;
+	border-right: 1px solid #C1C1C1;
+}
+
+.input_icons {
+	padding-left: 4px;
+}
+
+.select2--fix .select2-container {
+	width: 100% !important;
+}
+
+.etiqueta-checkbox {
+	/*font-family: Helvetica Neue, sans-serif !important;*/
+	font-size: 12px !important;
+	font-weight: bold;
+}
+
+.app-documento-estado {
+	margin-left: 2em;
+}	
+
+
+.app-label-link {
+	font-size: 14px !important;
+}
+
+.app-fix-user-menu {
+	margin-right: 0 !important;
+}
+
+.app-logo {
+	width: 20%;
+	height: 20%;
+
+}
+.corem-img-empresa {
+	width: 120px !important;
+}
+
+@media (max-width: 991px) {
+
+	.corem-boton-salir {
+		background-color: #dd4b39 !important;
+	}
+}
+.corem-textarea {
+	height:30px !important;
+}
+.corem-modal {
+	width: 60% !important;
+}
+.corem-text-small {
+	font-size: .7em;
+	color: gray;
+}
+.corem-text-medium {
+	font-size: .9em;
+	color: gray;
+}
+.corem-text-normal {
+	font-size: 1em;
+	color: #3C8DBC;
+}
+.corem-shadow {
+	text-decoration: underline;
+}

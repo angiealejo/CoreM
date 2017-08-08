@@ -1,0 +1,279 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% load filename %}
+
+{% block title %} CoreM - Ordenes de Trabajo {% endblock title %}
+{% block css %}
+
+  <!-- COREM -->
+  <link rel="stylesheet" type="text/css" href="{% static 'orden_trabajo/reporte/reporte_preview.css' %}">
+
+{% endblock %}
+{% block contenido %}
+<body>
+
+    <input type="text" id="caja_ot_id" value="{{ orden.pk }}" class="hidden">
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        <span id="titulo">Ordenes de Trabajo</span>
+        <small id="operacion">{{ operation }}</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i>Inicio</a></li>
+        <li><a href="{% url 'trabajos:ordenes_lista' %}">Orden de Trabajo</a></li>
+        <li class="active">{{ operation}}</li>
+      </ol>
+    </section>
+
+    <div class="pad margin no-print">
+      <div class="callout callout-info mensaje-impresion">
+        <h4><i class="fa fa-info"></i> Nota:</h4>
+        Para imprimir el reporte de mantenimiento haga clic en el botón "Imprimir".
+      </div>
+      
+    </div>
+    <div class="row margin no-print">
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label for="id_empresa"class="control-label">
+              Seleccione Logo:
+          </label>
+          
+          <select class="form-control input-sm"id="id_empresa">
+            <!--
+            <option value="1">TURBINE FIELD SOLUTIONS</option>
+            <option value="2">NUVOIL</option>
+            -->
+          </select>   
+            
+        </div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="invoice">
+
+      <!-- DATOS DEL EQUIPO Y DEL TRABAJO -->
+
+      <div class="row">
+
+        <div class="col-xs-12">
+          
+          <table class="table table-bordered datos-inicio">
+            <tbody>
+              <tr>
+                <td class="header-logo" colspan="2">
+                  <img id="id_logo" class="img-responsive" src="{% static 'images/logos/tfs_logo.jpg' %}" alt="Logo">
+                </td>
+                <td class="header-descripcion" colspan="2">
+                    <p class="text-justify">
+                      <strong>{{ orden.equipo.contrato.descripcion | safe }}</strong>
+                    </p>
+                    Número de Contrato: <strong>{{ orden.equipo.contrato.numero }}</strong>
+                </td>
+              </tr>            
+              <tr>
+                  <th class="datos-inicio-left" colspan="2">DATOS DEL EQUIPO</th>
+                  <th class="datos-inicio-right" colspan="2">DATOS DEL TRABAJO</th>
+              </tr>
+              <tr>
+                <th class="datos-inicio-left-labels">
+                  UBICACIÓN:
+                </th>
+                <td>
+                    <strong>
+                      {% if orden.equipo.padre %}{{ orden.equipo.padre }}{% endif %}  
+                    </strong>
+                </td>
+
+                <th class="datos-inicio-right-labels">
+                  TIPO DE MANTENIMIENTO:
+                </th>
+                <td>
+                    <strong>{{ tipo_mantenimiento }}</strong>
+                </td>                
+              </tr>
+
+              <tr>
+                <th class="datos-inicio-left-labels">
+                  DESCRIPCIÓN:
+                </th>
+                <td>
+                  <strong>{{ orden.descripcion }}</strong>
+                </td>
+                <th class="datos-inicio-right-labels">
+                  TIPO DE TRABAJO:
+                </th>
+                <td>
+                  <strong>{{ orden.get_especialidad_display }}</strong>
+                </td>
+              </tr>
+
+              <tr>
+                <th class="datos-inicio-left-labels">
+                  ID EQUIPO:
+                </th>
+                <td>
+                  <strong>{{ orden.equipo.tag}}</strong>
+                </td>
+                <th class="datos-inicio-right-labels">
+                  REPORTE DE ACTIVIDAD: 
+                </th>
+                <td>
+                  <strong>{{ orden.codigo_reporte }}</strong>
+                </td>                
+              </tr>
+              <tr>
+                <th class="datos-inicio-left-labels">
+                </th>
+                <td></td>
+                <th class="datos-inicio-right-labels">
+                  HORAS HOMBRE REALES: 
+                </th>
+                <td>
+                  <strong>{{ horas_hombre }}</strong>
+                </td>                
+              </tr>
+            </tbody>
+
+          </table>
+        </div>        
+      </div>
+
+      <!-- REPORTE DE ACTIVIDADES -->
+
+      <!-- Titulo -->  
+      <div class="row titulo-reporte">
+          <div class="col-xs-12">
+              <h6>REPORTE DE ACTIVIDADES</h6>
+          </div>
+      </div>
+
+      {% for actividad in actividades %}
+
+        <!-- Descripcion de la actividad -->
+        <div class="row actividad">
+            <div class="col-xs-12">
+              <p class="text-justify">
+                <strong>{{ actividad.numero }}.</strong>
+                <span class="actividad-descripcion">{{ actividad.descripcion }}:</span>
+              </p>
+            </div>
+
+            <div class="col-xs-12 comentarios">
+
+              <!-- Comentarios -->
+              {% for detalle in actividad.actividaddetalle_set.all %}
+
+                 {% if detalle.comentarios %}
+                 <div class="comentario">
+                    
+                        {{ detalle.comentarios|safe }}
+                        {% if detalle.imagen %} 
+                        <span>(Ver imagen: <strong>{{ detalle.imagen|filename }}</strong>)</span>
+                        {% endif %}
+                  </div>
+                 {% endif %}
+
+              {% endfor %}            
+              
+            </div>
+
+              {% for detalle in actividad.actividaddetalle_set.all %}
+
+                <!-- Imagen -->
+                {% if detalle.imagen %}
+
+                     <div class="col-xs-4 col-sm-4">
+                       <img class="img-responsive img-thumbnail" title="{{ detalle.imagen|filename }}" src="{{MEDIA_URL}}{{detalle.imagen}}" alt="">
+                       <span class="foto-title">Imagen: <strong>{{detalle.imagen|filename}}</strong></span>
+                     </div>
+                {% endif %}
+                
+              {% endfor %}            
+        </div>
+
+      {% endfor %}
+
+      <!-- Personal Involucrado en el mantenimiento -->
+      <div class="row">
+        
+        <div class="col-xs-12">
+          <h6 class="personal-title">PERSONAL INVOLUCRADO EN LAS ACTIVIDADES:</h6>
+
+          {% for persona in personal %}
+            <p class="personal-involucrado"> 
+              {{ persona.empleado.profile.puesto|default_if_none:"Sin especialidad" }}: 
+              <span><strong>{{ persona.empleado.profile }}</strong></span>
+            </p>
+          {% endfor %}          
+        </div>
+      </div>
+
+      <!-- Pie de reporte  -->
+      <div class="row">
+        <div class="col-xs-12">
+              <table class="table table-bordered datos-elaboracion">
+                <tbody>
+                  <tr>
+                    <th>Realizado por:</th>
+                    <td>
+                      {% if orden.responsable %}
+                        {{ orden.responsable }}
+                      {% else %}
+                        No se ha asignado un responsable
+                      {% endif %}
+                    </td>
+                    <th>Revisado por:</th>
+                    <td>
+                      {% if orden.solicitante %}
+                        {{ orden.solicitante }}
+                      {% else %}
+                        No se ha asignado un solicitante
+                      {% endif %}
+                    </td>                    
+                  </tr>
+                  <tr>
+                    <th>Lugar:</th>
+                    <td>PAE AGOSTO 12</td>
+                    <th>Fecha:</th>
+                    <td>
+                      {% if orden.fecha_real_fin %}
+                        {{ orden.fecha_real_fin | date:"d-M-Y" }}
+                      {%else %}
+                        Sin fecha real de fin registrada
+                      {% endif %}
+                    </td>                    
+                  </tr>
+                </tbody>
+              </table> 
+        </div>
+      </div>
+      
+      <!-- this row will not appear when printing -->
+      <div class="row no-print">
+        <div class="col-xs-12">
+          <button class="btn btn-default" id="boton_imprimir">  
+            <i class="fa fa-print"></i>
+            Imprimir
+          </button>
+            
+            
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+    <div class="clearfix"></div>
+   </body>
+{% endblock %}
+
+{% block scripts %}
+
+  <!-- CoreM -->
+  <script src="{% static 'orden_trabajo/reporte/reporte_preview.js' %}"></script>
+
+{% endblock %}

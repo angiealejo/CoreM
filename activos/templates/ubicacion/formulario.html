@@ -1,0 +1,95 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} {{ operation }} Ubicación {% endblock title %}
+
+{% block contenido %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+	<span id="titulo">Ubicaciones</span>
+	<small>{{ operation }}</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i> Inicio</a></li>
+		<li><a href="{% url 'activos:ubicaciones_lista' %}">Ubicaciones</a></li>
+		<li class="active"> {{ operation }} </li>
+	</ol>
+</section>
+<!-- Main content -->
+<section class="content" id="contenido">
+	
+
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">Favor de proporcionar los siguientes datos:</h3>
+				</div>
+				<!-- /.box-header -->
+				<form role="form" action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+					<div class="box-body">
+
+
+						<!-- Clave y Descripcion -->
+						<div class="row">
+							<div class="col-sm-3">
+
+								<div class="form-group {% if form.clave.field.required %} has-warning {% endif %} {% if form.clave.errors %} has-error {% endif %}">
+
+								  	<label class="control-label">
+								  		<i class="fa {% if form.clave.field.required %} fa-asterisk {% endif %} {% if form.clave.errors %} fa-asterisk {% endif %}"></i> 
+								  		{{ form.clave.label }} 
+								 	</label>
+								    {{ form.clave }}
+								  
+								    {% for error in form.clave.errors %}
+								    <span class="help-block">{{ error }}</span>
+								    {% endfor %}
+								</div>
+
+							</div>
+
+							<div class="col-sm-9">
+
+								<div class="form-group {% if form.descripcion.field.required %} has-warning {% endif %} {% if form.descripcion.errors %} has-error {% endif %}">
+
+								  	<label class="control-label">
+								  		<i class="fa {% if form.descripcion.field.required %} fa-asterisk {% endif %} {% if form.descripcion.errors %} fa-asterisk {% endif %}"></i> 
+								  		{{ form.descripcion.label }} 
+								 	</label>
+								    {{ form.descripcion }}
+								  
+								    {% for error in form.descripcion.errors %}
+								    <span class="help-block">{{ error }}</span>
+								    {% endfor %}
+								</div>
+
+							</div>						
+						</div>
+
+					</div>
+					<!-- /.box-body -->
+					<div class="box-footer">
+
+						<a class="btn btn-default" href="{% url 'activos:ubicaciones_lista' %}">
+							<i class="fa fa-arrow-circle-left"></i>
+							Regresar
+						</a>
+						<button type="submit" class="btn btn-success pull-right">
+							<i class="fa fa-save"></i>
+							Guardar
+						</button>
+					</div>
+					<!-- /.box-footer -->
+				</form>
+			</div>
+			<!-- /.box -->
+		</div>
+	</div>
+</section>
+<!-- /. Main content -->
+{% endblock contenido %}

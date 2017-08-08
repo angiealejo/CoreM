@@ -1,0 +1,147 @@
+
+
+h6 {
+    text-align: center;
+    font-weight: bold;
+} 
+
+
+.mensaje-impresion {
+    margin-bottom: 0!important;
+}
+
+.header {
+    margin-bottom: 0px !important;
+}
+
+.header-logo {
+    width: 50%;
+}
+
+.header-descripcion {
+    width: 50%;   
+    background-color: #E6E6E6;
+}
+
+
+.datos-inicio {
+    font-size: 12px !important;
+    margin-bottom: 12px !important;
+    border-spacing: 0px !important;
+}
+
+    .datos-inicio tbody tr td {
+        padding: 2px;
+        
+    }
+
+    .datos-inicio tbody tr th {
+        padding: 2px;
+        font-weight: normal;
+        width: 18%;
+    }
+
+
+.datos-inicio-left {
+    /* width: 50%; */
+    text-align: center;
+    background-color: #E6E6E6;
+    font-weight: bold !important;
+}
+
+    .datos-inicio-left-labels {
+        background-color: #E6E6E6;
+        text-align: center;
+        
+    } 
+
+.datos-inicio-right {
+    /* width: 50%; */
+    text-align: center;
+    background-color: #E6E6E6;
+    font-weight: bold !important;
+}
+
+    .datos-inicio-right-labels {
+        background-color: #E6E6E6;
+        text-align: center;
+      
+    } 
+
+
+.titulo-reporte  h6{
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 2px 0 2px 0;
+
+}
+
+.actividad {
+    margin-top: 14px;
+}
+
+    .comentarios {
+        font-size: 14px;
+    }
+        .comentario {
+            margin-bottom: 10px;
+        }
+            .comentario p {
+                display: inline;
+            }
+            .comentario span {
+                font-size: 12px;
+            }
+
+.actividad-descripcion {
+    font-size: 14px !important;
+}
+
+.actividad-detalle-descripcion {
+    font-size: 12px !important;
+}
+
+    .foto-title {
+        font-size: 12px !important;
+    }
+
+.personal-title {
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 2px 0 2px 0;
+}
+
+.personal-involucrado {
+    font-size: 12px !important;
+}
+
+.datos-elaboracion {
+    font-size: 12px !important;
+}
+
+    .datos-elaboracion tbody tr td {
+        padding: 2px;
+    }
+
+    .datos-elaboracion tbody tr th {
+        padding: 2px;
+    }
+    
+    .datos-elaboracion tr th {
+        font-weight: normal;
+        width: 100px;
+        background-color: #E6E6E6;
+        padding: 0;
+        margin: 0;
+    }
+.datos-elaboracion tr td {
+    font-weight: bold;
+}
+
+
+@media screen, print {
+
+    thead {
+        display: table-header-group;
+    }
+}

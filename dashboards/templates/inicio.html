@@ -1,0 +1,192 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} CoreM - Inicio {% endblock title %}
+
+{% block css %}
+
+  <!-- fullCalendar 2.2.5-->
+  <link rel="stylesheet" href="{% static 'theme/plugins/fullcalendar/fullcalendar.min.css' %}">
+  <link rel="stylesheet" href="{% static 'theme/plugins/fullcalendar/fullcalendar.print.css' %}" media="print">
+
+{% endblock css %}	
+
+{% block contenido %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+	<span id="titulo">Inicio</span>
+	<small>Control panel</small>
+	</h1>
+</section>
+<!-- Main content -->
+<section class="content">
+
+	<!-- Small boxes (Stat box) -->
+	<div class="row">
+
+		<div class="col-lg-4 col-xs-6">
+			<!-- small box -->
+
+			<div class="small-box bg-green">
+				<div class="inner">
+					<h3 id="id_ordenes_abiertas"></h3>
+					<p>Ordenes Abiertas</p>
+				</div>
+				<div class="icon">
+					<i class="fa fa-wrench"></i>
+				</div>
+				<a href="{% url 'trabajos:ordenes_lista' %}busqueda/CAP" class="small-box-footer">
+					Mas información <i class="fa fa-arrow-circle-right"></i>
+				</a>
+			</div>
+		</div>
+		<!-- ./col -->
+		<div class="col-lg-4 col-xs-6">
+			<!-- small box -->
+			<div class="small-box bg-aqua">
+				<div class="inner">
+					<h3 id="id_ordenes_terminadas"></h3>
+					<p>Ordenes Terminadas</p>
+				</div>
+				<div class="icon">
+					<i class="fa fa-wrench"></i>
+				</div>
+				<a href="{% url 'trabajos:ordenes_lista' %}busqueda/TER" class="small-box-footer">
+					Mas información <i class="fa fa-arrow-circle-right"></i>
+				</a>
+			</div>
+		</div>
+
+		<!-- ./col -->
+		<div class="col-lg-4 col-xs-6">
+			<!-- small box -->
+			<div class="small-box bg-yellow">
+				<div class="inner">
+					<h3 id="id_entradas_transito"></h3>
+					<p>Entradas En Transito</p>
+				</div>
+				<div class="icon">
+					<i class="fa fa-cubes"></i>
+				</div>
+				<a href="{% url 'inventarios:entradas_traspaso_lista' %}TRAN" class="small-box-footer">
+					Mas información <i class="fa fa-arrow-circle-right"></i>
+				</a>
+			</div>
+		</div>
+		<!-- ./col -->
+	</div>
+	<!-- /.row -->
+
+	<!-- Ultimas Ordenes -->
+	<div class="row">
+		<div class="col-sm-12">
+
+			<!-- TABLE: LATEST ORDERS -->
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">Ultimas 10 Ordenes</h3>
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="table-responsive">
+						<table class="table no-margin">
+							<thead>
+								<tr>
+									<th>Orden</th>
+									<th>Descripcion</th>
+									<th>Responsable</th>
+									<th>Equipo</th>
+									<th>Estado</th>
+								</tr>
+							</thead>
+							<tbody id="tabla_contenido" data-ordenes="{% url 'trabajos:ordenes_editar' 0 %}" data-equipos="{% url 'activos:equipos_editar' 0 %}">
+							</tbody>
+						</table>
+					</div>
+					<!-- /.table-responsive -->
+				</div>
+				<!-- /.box-body -->
+				<div class="box-footer clearfix">
+					<a href="{% url 'trabajos:ordenes_nueva' %}" class="btn btn-sm bg-purple pull-left">
+						<i class="fa fa-plus-circle"></i>
+						Crear Orden
+					</a>
+					<a href="{% url 'trabajos:ordenes_lista' %}" class="btn btn-sm btn-default pull-right">
+						Ver Todas
+					</a>
+				</div>
+				<!-- /.box-footer -->
+			</div>
+			<!-- /.box -->
+		</div>
+	</div>
+
+	<!-- Calendario y Chat -->
+	 <div class="row">
+	
+		<!-- <div class="col-sm-4 col-sm-offset-8"> -->
+		<div class="col-sm-12">
+			<div class="box box-success">
+				<div class="box-header">
+					<i class="fa fa-comments-o"></i>
+					<h3 class="box-title">Mensajes</h3>
+					<div class="box-tools pull-right">
+						<a href="{% url 'comunicacion:mensajes_historial' %}" class="btn btn-box-tool">
+							<i class="fa fa-clock-o"></i>
+							Historial
+						</a>
+					</div>					
+				</div>
+				<div class="box-body chat" id="chat-box">
+					
+				</div>
+				
+				<div class="box-footer">
+					<div class="input-group">
+						<input class="form-control" placeholder="Escribe un mensaje....." id="caja_mensaje">
+						<div class="input-group-btn">
+							<button type="button" class="btn btn-success" id="boton_agregar"><i class="fa fa-plus"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		</div>
+
+</section>
+<!-- /. Main content -->
+
+{% endblock contenido %}
+
+{% block scripts %}
+
+	<!-- ChartJS 1.0.1 -->
+	<script src="{% static 'theme/plugins/chartjs/Chart.min.js' %}"></script>
+
+	<!-- Moment -->
+	<script src="{% static 'libs/moment.js/2.11.2/moment.min.js' %}"></script>
+
+	<!-- fullCalendar 2.2.5 -->
+	<script src="{% static 'theme/plugins/fullcalendar/fullcalendar.min.js' %}"></script>
+
+	<!-- datepicker -->
+	<script src="{% static 'theme/plugins/datepicker/bootstrap-datepicker.js' %}"></script>	
+
+	<!-- Slimscroll -->
+	<script src="{% static 'theme/plugins/slimScroll/jquery.slimscroll.min.js' %}"></script>	
+
+	<!-- CoreM -->
+	<script src="{% static 'inicio.js' %}"></script>
+
+{% endblock scripts %}
+
+
+

@@ -1,0 +1,153 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} Anexos Articulo {% endblock title %}
+
+{% block css %}
+
+	<!-- Kendo -->
+	<link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.rtl.min.css' %}"/>
+	<link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.common.min.css' %}"/>
+	<link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.default.min.css' %}"/>
+
+{% endblock css %}
+
+{% block contenido %}
+
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+	  <h1>
+	    <span id="titulo">Articulos</span>
+	    <small>Anexos</small>
+	  </h1>
+	  <ol class="breadcrumb">
+	    <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i> Inicio</a></li>
+	    <li><a href="{% url 'inventarios:articulos_lista' %}">Articulos</a></li>
+	    <li class="active">Anexos</li>
+	  </ol>
+	</section>
+
+	<!-- Main content -->
+	<section class="content" id="contenido">
+
+		<div class="row">
+	        <div class="col-md-12">
+			<input id="id_equipo" type="hidden" value="{{ id }}">
+	          <!-- Filtros -->
+	          <div class="box box-info">
+	            <div class="box-header with-border">
+	            	<div class="box-header with-border">
+		             <h3 class="box-title">Articulo: <strong> {{ articulo.clave }} - {{ articulo.descripcion }}</strong></h3>
+		            </div>
+		            <div class="box-body">
+		            	<a href= "/articulos/anexos/{{id}}/texto" class="btn btn-app">
+			           	<i class="fa fa-text-width"></i> Texto
+			        </a>
+			        <a class="btn btn-app btn-primary active">
+			        	<i class="fa fa-file-image-o"></i> Imagen
+			        </a>
+			        <a href="/articulos/anexos/{{id}}/archivo" class="btn btn-app">
+			            <i class="fa fa-file-o"></i> Archivo
+			        </a>
+		            </div>
+	            	
+	            </div>
+	        </div>
+	            <!-- /.box-header -->
+				     <div class="box box-solid box-primary collapsed-box" id="id_panel">
+		            <div class="box-header with-border">
+		            	<h3 class="box-title">Anexar Imagen</h3>
+
+			          	<div class="box-tools pull-right">
+			            	<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+			          	</div>	              
+		            </div>
+	                <div class="box-body">
+						<form role="form" action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+		              		
+		               			
+					    		<div class="row">
+					    			<div class="col-sm-10 col-md-offset-1">
+					    				{% for field in form %}
+					    				<div class="form-group {% if field.field.required %} has-warning {% endif %} {% if field.errors %} has-error {% endif %}">
+					    					
+					    						<label for="{{ field.label }}">
+					       		 				<i class="fa {% if field.field.required %} fa-asterisk {% endif %} {% if field.field.errors %} fa-asterisk {% endif %}"></i>
+												{{ field.label }}
+					       		 				</label>
+
+					        					{{ field }}
+					        				
+					        					{% for error in field.errors %}
+		              						<div class="help-block text-right" id="{{ field.label }}-error">
+		              							{{ error }}
+		              						</div>
+		              							{% endfor %}
+					    				</div>
+					    				{% endfor %}
+					   				</div>
+					   			</div>
+					   			
+					   		
+		              	
+		              <!-- /.box-body -->  
+		              
+		              <!-- /.box-footer -->
+
+	        	</div>
+	        		 <div class="box-footer">
+		        		 <div class="col-xs-12">
+
+		        		 	 <button type="submit"  class="btn btn-success pull-right">Guardar</button>
+		        		 </div>
+	              	</div>
+
+	              </form>
+	    		</div> 	
+	          <!-- /.box -->			
+
+		</div>
+</div>
+		<div class="row">
+		{% for anexo in anexos %}
+			<div class="col-md-4" id="{{ anexo.id }}">
+          		<div class="box box-solid">
+            		<div class="box-header with-border">
+            		<i class="fa fa-file-image-o"></i>
+              			<div class="pull-right">
+              				<button data-action="{{ anexo.id }}" class="btn btn-danger btn-sm"><i class="fa fa-trash" title="Eliminar"></i></button>
+            				<a href="{{MEDIA_URL}}{{ anexo.ruta }}" download class="btn btn-default btn-sm"><i class="fa fa-download" title="Descargar"></i></a>
+            			</div>	
+            		
+              			<h3 class="box-title">{{ anexo.descripcion }}</h3>
+            		</div>
+            		<!-- /.box-header -->
+		            <div class="box-body">
+		            	<div align="center">
+		            	<img src="{{MEDIA_URL}}{{ anexo.ruta }}" alt="{{ anexo.descripcion }}" width="300px", height="200px" >   
+		            	</div>
+		            	
+		            </div>
+            		<!-- /.box-body -->
+          		</div>
+          <!-- /.box -->
+        	</div>
+        	{% endfor %}
+ 
+		</div>
+	</section>
+	<!-- /. Main content -->
+
+{% endblock contenido %}
+
+{% block scripts %}
+
+	<!-- Kendo -->
+	<script src="{% static 'libs/kendo/2015.2.624/js/cultures/kendo.culture.es-MX.min.js' %}"></script>
+	<script src="{% static 'libs/kendo/2015.2.624/js/kendo.web.min.js' %}"></script>
+
+	<!-- CoreM -->
+	<script src="{% static 'articulo/anexos/imagen.js' %}"></script>
+
+{% endblock scripts %}

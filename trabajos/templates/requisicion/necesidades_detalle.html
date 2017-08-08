@@ -1,0 +1,138 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% load humanize %}
+
+{% block title %} Necesidades - Detalle {% endblock title %}
+
+{% block css %}
+
+{% endblock css %}
+
+{% block contenido %}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+        <span id="titulo">Reporte de Necesidades</span>
+        <small>Detalle</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i> Inicio</a></li>
+            <li><a href="{% url 'trabajos:necesidades' %}"><i class="fa fa-home"></i> Necesidades</a></li>
+            <li>Detalle</li>
+        </ol>
+    </section>
+
+    <section class="content" id="contenido">
+        <div class="row">
+        <div class="col-xs-12">
+
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Ordenes donde necesitas: <strong><a href="{% url 'inventarios:articulos_editar' material.first.articulo.pk %}">{{ material.first.articulo.descripcion }}</a></strong>  (Cant. Actual: <strong>{{material.first.articulo.cantidad_stock|floatformat:2}}</strong>)</h3>
+
+              <div class="box-tools">
+
+                <a href="{% url 'trabajos:necesidades_stock_seg' %}" class="btn bg-olive btn-sm">
+                  <i class="fa fa-file-excel-o"></i>
+                  Exportar
+                </a>
+
+              </div>
+            </div>
+
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover">
+
+                {% if material %}
+                  <tr>
+                    <th>OT</th>
+                    <th>Descripcion</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Cantidad Estimada</th>
+                    <th>Cantidad Surtida</th>
+                    <th>Necesidad</th>
+                  </tr>
+                  {% for registro in material %}
+
+                      <tr>
+                        <td>
+                          <a href="{% url 'trabajos:ordenes_editar' registro.orden.pk %}">
+                            {{registro.orden.pk}}  
+                          </a>
+                          
+                        </td>
+                        <td>{{registro.orden.descripcion}}</td>
+                        <td>
+                            {% if registro.orden.get_estado_display == "ABIERTA" %}
+                              <span class='label label-success'>
+                                  {{ registro.orden.get_estado_display  }}
+                              </span>
+                            {% endif %}
+
+                            {% if registro.orden.get_estado_display == "TERMINADA" %}
+                                <span class='label label-info'>
+                                    {{ registro.orden.get_estado_display  }}
+                                </span>                            
+                            {% endif %}
+
+                            {% if registro.orden.get_estado_display == "CERRADA" %}
+                                <span class='label label-default'>
+                                    {{ registro.orden.get_estado_display  }}
+                                </span>   
+                            {% endif %}                         
+
+                            {% if registro.orden.get_estado_display == "CANCELADA" %}
+                                <span class='label label-yellow'>
+                                    {{ registro.orden.get_estado_display  }}
+                                </span>                            
+                            {% endif %}
+
+                            {% if registro.orden.get_estado_display == "PENDIENTE" %}
+                                <span class='label label-warning'>
+                                    {{ registro.orden.get_estado_display  }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                          {{registro.orden.responsable|default_if_none:""}}
+                        </td>
+                        <td>
+                          {{ registro.cantidad_estimada|floatformat:2 }}
+                        </td>
+                        <td>
+                          {{ registro.cantidad_real|floatformat:2 }}
+                        </td>
+                        <td>
+                          {{ registro.necesidad|floatformat:2 }}
+                        <td>
+
+                      </tr>
+
+                  {% endfor %}
+                {% else %}
+
+                    <tr>
+                      <th>No se encontraron ordenes</th>
+                    </tr>                
+
+                {% endif %}
+              </table>
+            </div>
+          </div>
+          <!-- /.box -->
+        
+        </div>
+      </div>  
+    </section>
+
+
+{% endblock contenido %}
+
+{% block scripts %}
+
+{% endblock scripts %}

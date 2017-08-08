@@ -1,0 +1,282 @@
+{% load static from staticfiles %}
+
+{% load filename %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Mantenimiento CoreM | Reporte</title>
+
+    <style>
+        @page {
+
+            @frame header_frame { 
+                -pdf-frame-content: header_content;
+                left: 20pt; width: 555pt; top: 20pt; height: 300pt;
+            }
+            @frame content_frame {
+                left: 20pt; width: 555pt; top: 255pt; height: 515pt;
+            }
+            @frame footer_frame {
+                -pdf-frame-content: footer_content;
+                left: 20pt; width: 555pt; top: 770pt; height: 60pt;
+            }            
+        }
+    </style>
+
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="{% static 'libs/bootstrap/2.2.1/bootstrap.min.css' %}">
+
+    <!-- corem -->
+    <link rel="stylesheet" href="{% static 'orden_trabajo/reporte/reporte_pdf.css' %}">
+    
+</head>
+<body>
+
+    <div id="header_content">
+      
+        <!-- DATOS DEL EQUIPO Y DEL TRABAJO -->
+        <table class="datos-inicio">
+            <tbody>
+                <tr>
+                    <td class="header-logo" colspan="3">
+                        <img id="id_logo" class="logo" src="{{ MEDIA_URL }}{{empresa.logo}}" alt="logo">
+                    </td>
+                    <td class="header-descripcion" colspan="3" rowspan="4">
+                        
+                        <p class="texto-contrato"><strong class="contrato-desc">{{ orden.equipo.contrato.descripcion  }}</strong>
+                        <br>
+                        Número de Contrato: <strong>{{ orden.equipo.contrato.numero }}</strong></p>
+                    </td>
+                </tr>
+
+                <tr>   
+                    <td class="datos-inicio-calidad">
+                        <p class="texto-encabezado"><strong>Núm. de Revisión:</strong></p>
+                    </td>
+                    <td class="datos-inicio-contenido">
+                        <p class="texto-encabezado">2</p>
+                    </td>
+                    <td rowspan="3">
+                       <p class="texto-encabezado">Código:  <strong>PAE AGOSTO 12 - REPORTE DE ACTIVIDADES</strong></p>
+                    </td>                    
+                </tr>
+                <tr>   
+
+                    <td class="datos-inicio-calidad">
+                        <p class="texto-encabezado"><strong>Vigente a partir de:</strong></p>
+                    </td>
+                    <td class="datos-inicio-contenido">
+                        <p class="texto-encabezado">MAR-17</p>
+                    </td>
+                </tr>
+                <tr>   
+                    <td class="datos-inicio-calidad">
+                        <p class="texto-encabezado"><strong>Página:</strong></p>
+                    </td>
+                    <td class="datos-inicio-contenido texto-encabezado">
+                        <pdf:pagenumber> de <pdf:pagecount>
+                    </td> 
+                </tr>                                
+                <tr>
+                    <th class="datos-inicio-left" colspan="3">
+                        <p class="texto-encabezado">DATOS DEL EQUIPO</p>
+                    </th>
+                    <th class="datos-inicio-right" colspan="3">
+                    <p class="texto-encabezado">DATOS DEL TRABAJO</p>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="datos-inicio-left-labels">
+                        <p class="texto-encabezado">UBICACIÓN</p> 
+                    </th>
+                    <td colspan="2">
+                        <p class="texto-encabezado">
+                            <strong>
+                        {% if orden.equipo.padre %}{{ orden.equipo.padre.tag }} ({{ orden.equipo.padre.descripcion }}){% endif %}
+                        </strong>
+                        </p>
+                    </td>
+                    <th class="datos-inicio-right-labels datos-inicio-trabajo">
+                        <p class="texto-encabezado">TIPO DE MANTENIMIENTO:</p>
+                    </th>
+                    <td colspan="2" class="prueba">
+                        <p class="texto-encabezado">
+                            <strong>{{ tipo_mantenimiento }}</strong>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="datos-inicio-left-labels ">
+                        <p class="texto-encabezado">DESCRIPCIÓN:</p>
+                    </th>
+                    <td colspan="2">
+                        <p class="texto-encabezado">
+                            <strong>{{ orden.descripcion }}</strong>
+                        </p>
+                    </td>
+                    <th class="datos-inicio-right-labels">
+                        <p class="texto-encabezado">TIPO DE TRABAJO:</p>
+                    </th>
+                    <td colspan="2" >
+                        <p class="texto-encabezado"><strong>{{ orden.get_especialidad_display }}</strong></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="datos-inicio-left-labels">
+                        <p class="texto-encabezado">ID EQUIPO:</p>
+                    </th>
+                    <td colspan="2">
+                        <p class="texto-encabezado">
+                            <strong>{{ orden.equipo.tag}} ({{ orden.equipo.descripcion }})</strong>
+                        </p>
+                    </td>
+                    <th class="datos-inicio-right-labels">
+                        <p class="texto-encabezado">HORAS HOMBRE REALES:</p>
+                    </th>
+                    <td colspan="2" >
+                        <p class="texto-encabezado">
+                            <strong>{{ horas_hombre }}</strong>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="datos-inicio-left-labels">
+                        <p class="texto-encabezado">OT:</p>
+                    </th>
+                    <td colspan="2">
+                        <p class="texto-encabezado"><strong>{{ orden.id }}</strong></p>
+                    </td>
+                    <th class="datos-inicio-right-labels">
+                        <p class="texto-encabezado">PERMISO DE HSE:</p>
+                    </th>
+                    <td colspan="2">
+                        <p class="texto-encabezado"><strong>{{ orden.permiso }}</strong></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="footer_content">    
+        <!-- Pie de reporte  -->
+        <div>
+            <table class="datos-elaboracion">
+          <tbody>
+            <tr>
+              <th class="datos-elaboracion-label left">Realizado por:</th>
+              <td>
+                {% if orden.responsable %}
+                  {{ orden.responsable }}
+                {% else %}
+                  No se ha asignado un responsable
+                {% endif %}
+              </td>
+              <th class="datos-elaboracion-label right">Revisado por:</th>
+              <td>
+                {% if orden.solicitante %}
+                  {{ orden.solicitante }}
+                {% else %}
+                  No se ha asignado un solicitante
+                {% endif %}
+              </td>                    
+            </tr>
+            <tr>
+              <th class="datos-elaboracion-label">Lugar:</th>
+              <td>PAE AGOSTO 12</td>
+              <th class="datos-elaboracion-label">Fecha:</th>
+              <td>
+                {% if orden.fecha_real_fin %}
+                  {{ orden.fecha_real_fin | date:"d-M-Y" }}
+                {%else %}
+                  Sin fecha real de fin registrada
+                {% endif %}
+              </td>                    
+            </tr>
+           
+          </tbody>
+        </table>
+        </div>
+        
+        <div class="folio-footer">
+            Folio: <strong>{{ orden.codigo_reporte }}</strong>
+        </div> 
+    </div>    
+
+    <div>
+        <!-- REPORTE DE ACTIVIDADES -->
+
+        <!-- Titulo -->  
+        <h6 class="titulo-reporte">REPORTE DE ACTIVIDADES</h6>
+
+        {% for actividad in actividades %}
+
+            <!-- Descripcion de la actividad -->
+            <div class="actividad">
+              <strong>{{ actividad.numero }}.</strong>
+              <span class="actividad-descripcion">{{ actividad.descripcion }}:</span>
+            </div>
+
+            <!-- Comentarios -->
+            {% for detalle in actividad.detalle_comentarios %}
+
+               {% if detalle.comentarios %}
+               <div class="comentario">
+                  
+                      {{ detalle.comentarios|safe }}
+                      {% if detalle.imagen %} 
+                      <span>(Ver imagen: <strong>{{ detalle.imagen|filename }}</strong>)</span>
+                      {% endif %}
+                </div>
+               {% endif %}
+            {% endfor %}          
+
+            <!-- Imagenes -->
+            {% if actividad.detalle_fotos %}
+
+                <table class="fotos">
+                    <tbody>
+                        <tr>
+                            {% for detalle in actividad.detalle_fotos %}
+
+                                {% if detalle.imagen %}
+
+                                    <td>
+                                        <img src="{{ MEDIA_URL }}{{detalle.imagen}}" width="325px" alt="foto">    
+                                        <div>Imagen: <strong>{{ detalle.imagen|filename }}</strong></div>
+                                    </td>
+                            
+                                {% endif %}
+    
+                                {% if forloop.counter|divisibleby:3 %}
+                                </tr>
+                                    {% if forloop.counter < actividad.detalle_fotos|length %}
+                                        <tr>
+                                    {% endif %}
+                                {% endif %}
+
+                            {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+
+        {% endfor %}
+
+        <!-- Personal Involucrado en el mantenimiento -->
+        <div>
+            <h6 class="personal-title">PERSONAL INVOLUCRADO EN LAS ACTIVIDADES</h6>
+
+            {% for persona in personal %}
+                <div class="personal-item">
+                    {{ persona.empleado.profile.puesto|default_if_none:"Sin especialidad" }}: 
+                    <span><strong>{{ persona.empleado.profile }}</strong></span>
+                </div>
+              
+            {% endfor %}          
+        </div>
+
+    </div>
+    
+</body>
+</html>       

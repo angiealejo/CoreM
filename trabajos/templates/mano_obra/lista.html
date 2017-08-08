@@ -1,0 +1,245 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} Mano Obra - Orden de Trabajo {% endblock title %}
+
+{% block css %}
+
+    <!-- Kendo -->
+    <link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.rtl.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.common-bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.bootstrap.min.css' %}"/>
+
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{% static 'theme/plugins/select2/select2.min.css' %}"/>
+
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="{% static 'theme/plugins/datepicker/datepicker3.css' %}">
+
+    <!-- CoreM -->
+    <link rel="stylesheet" href="{% static 'grid.css' %}"/>
+
+
+{% endblock css %}  
+
+
+{% block contenido %}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        <span id="titulo">Ordenes de Trabajo</span>
+        <small>Mano de Obra</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i>Inicio</a></li>
+        <li><a href="{% url 'trabajos:ordenes_lista' %}">Ordenes</a></li>
+        <li class="active">Mano de Obra</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content" id="contenido">
+
+        <div class="row">
+            <form role="form" action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+
+                <div class="col-md-12">
+                    
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs pull-right">                        
+                            <li><a id="tab_servicios" href="{% url 'trabajos:servicio_externo_lista' orden.id %}">Servicios</a></li>
+                            <li class="active">
+                                <a id="tab_mano_obra" href="#">Mano Obra</a>
+                            </li>
+                            <li><a id="tab_materiales" href="{% url 'trabajos:material_lista' orden.id %}">Materiales</a></li>
+                            <li><a id="tab_actividades" href="{% url 'trabajos:actividades_lista' orden.id %}">Actividades</a></li>
+                            <li><a href="{% url 'trabajos:ordenes_editar' orden.id %}">Generales</a></li>
+                            <li class="pull-left header"><i class="fa fa-th"></i> No. Orden: <strong id="ot_clave">{{ orden.id }}</strong> - <strong>{{ orden.descripcion }}</strong></li>
+                        </ul>
+                        <div class="tab-content">
+                        <input type="text" id="id_permiso" class="hidden" value="{{ permiso }}">
+                            <div class="tab-pane active">
+
+
+                                <div class="box box-info">
+                                    <div class="box-header box-header-border">
+                                        <h3 class="box-title">Registros</h3>
+                                        <div class="box-tools pull-right">
+
+                                            <a href="#win_modal" class="btn bg-purple btn-sm" data-toggle="modal" id="boton_nuevo">
+                                                <i class="fa fa-plus-circle"></i>
+                                                Nuevo
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div id="grid_principal">
+                                    </div>
+                                </div>  
+
+
+                            </div>
+                            <!-- /.tab-pane -->
+                        </div> <!-- /.tab-content -->
+                            
+                    </div> <!-- nav-tabs-custom -->
+                </div>
+
+            </form>
+        </div>
+
+
+        <!-- win_modal -->
+        <div class="modal fade" role="dialog" id="win_modal">
+          <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"></h4>
+              </div>
+              <div class="modal-body">
+
+                    <input class="hidden" id="modal_record_id" type="text" />
+
+                    <div class="row">
+
+                        <!-- Empleado -->
+                        <div class="col-sm-12">
+                            <div class="form-group has-warning select2--fix" id="mod_empleado_contenedor">
+                                <label for="mod_empleado">
+                                    <i class="fa fa-asterisk"></i>
+                                    Empleado:
+                                </label>
+                                <select class="form-control input-sm" id="mod_empleado">
+                                </select>
+                                <span class="help-block hidden" id="mod_empleado_mensaje">Este campo es requerido.</span>
+                            </div>
+                        </div> 
+                    </div>
+
+                    <div class="row">
+                        
+                        <!-- Fecha Inicio -->
+                        <div class="col-sm-6">
+                            <div class="form-group" id="mod_fecha_inicio_contenedor">
+                                <label for="mod_fecha_inicio">
+                                    Fecha Inicio:
+                                </label>
+                                <div class="input-group" id="mod_fecha_inicio_picker">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text" id="mod_fecha_inicio" data-date-format="yyyy-mm-dd" class="form-control input-sm pull-right">
+                                </div>
+                                <!-- /.input group -->
+                            </div>
+                        </div>  
+
+
+                        <!-- Fecha Fin -->
+                        <div class="col-sm-6">
+
+                            <div class="form-group" id="mod_fecha_fin_contenedor">
+                                <label for="mod_fecha_fin">
+                                    Fecha Fin:
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text" id="mod_fecha_fin" data-date-format="yyyy-mm-dd" class="form-control input-sm pull-right">
+                                </div>
+                                <!-- /.input group -->
+                            </div>
+                        </div>                                             
+
+                    </div>
+            
+                    <div class="row">
+
+                        <!-- Horas Estimadas -->
+                        <div class="col-sm-6">
+                            <div class="form-group" id="mod_hrs_est_contenedor">
+                                <label for="mod_hrs_est">
+                                    Horas Estimadas:
+                                </label>
+                                <input class="form-control input-sm" id="mod_hrs_est" maxlength="144" type="number" />
+                            </div>
+                        </div>
+
+                        <!-- Horas Reales -->
+                        <div class="col-sm-6">
+                            <div class="form-group" id="mod_hrs_real_contenedor">
+                                <label for="mod_hrs_real">
+                                    Horas Reales:
+                                </label>
+                                <input class="form-control input-sm" id="mod_hrs_real" maxlength="144" type="number" />
+                            </div>
+                        </div>  
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Descripcion -->
+                        <div class="col-sm-12">
+                            <div class="form-group" id="mod_desc_contenedor">
+                                <label for="mod_desc">
+                                    Descripcion:
+                                </label>
+                                <input class="form-control input-sm" id="mod_desc" maxlength="144" type="text" />
+                            </div>
+                        </div>                          
+                    </div>
+              </div>
+
+              <div class="modal-footer">
+
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                    <i class="fa fa-close"></i>
+                    Cerrar
+                </button>
+
+                <button type="button" class="btn btn-success" id="btn_modal_save">
+                    <i class="fa fa-save"></i>
+                    Guardar
+                </button>
+
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+    </section>
+    <!-- /. Main content -->
+
+{% endblock contenido %}
+
+{% block scripts %}
+
+    <!-- Kendo Js -->
+    <script src="{% static 'libs/kendo/2015.2.624/js/cultures/kendo.culture.es-MX.min.js' %}"></script>
+    <script src="{% static 'libs/kendo/2015.2.624/js/kendo.web.min.js' %}"></script>
+
+    <!-- Select2 -->
+    <script src="{% static 'theme/plugins/select2/select2.full.min.js' %}"></script>
+
+    <!-- InputMask -->
+    <script src="{% static 'theme/plugins/input-mask/jquery.inputmask.js' %}"></script>
+    <script src="{% static 'theme/plugins/input-mask/jquery.inputmask.date.extensions.js' %}"></script>
+    <script src="{% static 'theme/plugins/input-mask/jquery.inputmask.extensions.js' %}"></script>
+
+    <!-- bootstrap datepicker -->
+    <script src="{% static 'theme/plugins/datepicker/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'theme/plugins/datepicker/locales/bootstrap-datepicker.es.js' %}"></script>
+    
+    <!-- Moment -->
+    <script src="{% static 'libs/moment.js/2.11.2/moment.min.js' %}"></script>
+    
+    <!-- CoreM -->
+    <script src="{% static 'mano_obra/lista.js' %}"></script>
+
+{% endblock scripts %}

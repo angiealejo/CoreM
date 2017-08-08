@@ -1,0 +1,488 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<title class="no-print">{% block title %} {% endblock title %}</title>
+	<link rel="shortcut icon" href="/static/images/decoradores/favicon.png">
+
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+	<!-- Bootstrap 3.3.6 -->
+	<link rel="stylesheet" href="{% static 'theme/bootstrap/css/bootstrap.min.css' %}">
+	
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="{% static 'theme/plugins/ionicons/ionicons.min.css' %}">
+	
+	<!-- AdminLTE Skins. Choose a skin from the css/skins
+	     folder instead of downloading all of them to reduce the load. -->
+	<!-- <link rel="stylesheet" href="{% static 'libs/dist/css/skins/_all-skins.min.css' %}"> -->
+	<link rel="stylesheet" href="{% static 'theme/dist/css/skins/skin-red.min.css' %}">
+
+	<!-- iCheck -->
+	<link rel="stylesheet" href="{% static 'theme/plugins/iCheck/flat/blue.css' %}">
+
+	<!-- jQuery UI --> 
+	<link rel="stylesheet" href="{% static 'theme/plugins/jQueryUI/jquery-ui.min.css' %}"/>	
+
+	<!-- Theme style -->
+	<link rel="stylesheet" href="{% static 'theme/dist/css/AdminLTE.min.css' %}">	
+
+	<!-- Pace -->
+	<link rel="stylesheet" href="{% static 'theme/plugins/pace/pace.min.css' %}"/>
+
+	<!-- Alertifyjs --> 
+	<link rel="stylesheet" href="{% static 'libs/alertifyjs/1.6.0/css/alertify.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'libs/alertifyjs/1.6.0/css/themes/bootstrap.min.css' %}" />		
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="{% static 'libs/font-awesome/4.7.0/css/font-awesome.min.css' %}"> 
+	<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css"> -->
+	
+	<!-- CoreM -->
+	<link rel="stylesheet" href="{% static 'master.css' %}"/>
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+	{% block css %}
+	
+	{% endblock css %}	
+
+</head>
+<body class="hold-transition skin-red sidebar-mini">
+
+	<div class="wrapper">
+
+	  <header class="main-header">
+	    <!-- Logo -->
+	    <a href="{% url 'dashboards:inicio' %}" class="logo">
+	      <!-- mini logo for sidebar mini 50x50 pixels -->
+	      <span class="logo-mini"><b>C</b>M</span>
+	      <!-- logo for regular state and mobile devices -->
+	      <span class="logo-lg"><b>Core</b>M</span>
+	    </a>
+	    <!-- Header Navbar: style can be found in header.less -->
+	    <nav class="navbar navbar-static-top">
+	      <!-- Sidebar toggle button-->
+	      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+	        <span class="sr-only">Toggle navigation</span>
+	      </a>
+
+	      <div class="navbar-custom-menu">
+	        <ul class="nav navbar-nav">
+	          <!-- Messages: style can be found in dropdown.less-->
+
+	          <li class="dropdown messages-menu">
+	            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+	              <i class="fa fa-envelope-o"></i>
+	               <!-- <span class="label label-success">4</span>  -->
+	            </a>
+	            <ul class="dropdown-menu">
+	              <li class="header">Mensajes:</li>
+	              <li>
+	                 <!-- inner menu: contains the actual data -->
+	                <ul class="menu" id="mensajes_id">
+
+	                </ul>
+	              </li>
+	              <li class="footer"><a href="{% url 'comunicacion:mensajes_historial' %}">Ver todos los mensajes</a></li>
+	            </ul>
+	          </li>
+	          
+<!-- 	          <li class="dropdown notifications-menu">
+	            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+	              <i class="fa fa-bell-o"></i>
+	              
+	            </a>
+	            <ul class="dropdown-menu">
+	              <li class="header">Tienes 10 notificaciones</li>
+	              <li>
+	                
+	                <ul class="menu">
+	                  <li>
+	                    <a href="#">
+	                      <i class="fa fa-users text-aqua"></i> Se añadieron 5 nuevos miembros
+	                    </a>
+	                  </li>
+	                  <li>
+	                    <a href="#">
+	                      <i class="fa fa-file-o text-green"></i> 6 Ordenes de Trabajo abiertas
+	                    </a>
+	                  </li>
+	                  <li>
+	                    <a href="#">
+	                      <i class="fa fa-file-o text-info"></i> 2 Ordenes de Trabajo terminadas
+	                    </a>
+	                  </li>
+	                  <li>
+	                    <a href="#">
+	                      <i class="fa fa-cubes text-green"></i> 2 nuevas recepciones
+	                    </a>
+	                  </li>
+	                  <li>
+	                    <a href="#">
+	                      <i class="fa fa-user text-red"></i> Tu contraseña a cambiado
+	                    </a>
+	                  </li>
+	                </ul>
+	              </li>
+	              
+	            </ul>
+	          </li>  -->
+
+
+	          <!-- User Account: style can be found in dropdown.less -->
+	          <li class="dropdown user user-menu">
+	            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+	              	<!-- <img src="{% static 'libs/dist/img/user2-160x160.jpg' %}" class="user-image" alt="User Image"> -->
+
+					{% if user.profile.imagen %}
+						<img class="user-image" src="{{ MEDIA_URL }}{{ user.profile.imagen }}" alt="User Image">
+					{% else %}
+						<img src="{% static 'images/decoradores/no-image-user.jpg' %}" class="user-image img-responsive img-thumbnail" alt="User Image">
+					{% endif %}	  	              
+	              <span class="hidden-xs">
+						{% if user.get_full_name %} 
+							<strong>{{ user.get_full_name }} </strong>
+						{% else %}
+							{% if user.username == 'root'%}
+								<strong>Administrador</strong>
+							{% else %}
+								<strong>{{ user.username }}</strong>
+							{% endif %}
+						{% endif %}
+	              </span>
+	            </a>
+	            <ul class="dropdown-menu">
+	              <!-- User image -->
+	              <li class="user-header">
+	                <!-- <img src="{% static 'libs/dist/img/user2-160x160.jpg' %}" class="img-circle" alt="User Image"> -->
+					{% if user.profile.imagen %}
+						<img class="img-circle" src="{{ MEDIA_URL }}{{ user.profile.imagen }}" alt="User Image">
+					{% else %}
+						<img src="{% static 'images/decoradores/no-image-user.jpg' %}" class="img-circle img-responsive img-thumbnail" alt="User Image">
+					{% endif %}	  	 	                
+
+					<p>
+						{% if user.get_full_name %} 
+							{{ user.get_full_name }} 
+						{% else %}
+							{% if user.username == 'root'%}
+								Administrador
+							{% else %}
+								{{ user.username }}	
+							{% endif %}
+						{% endif %}
+						{% if user.profile.puesto %} 
+							- {{ user.profile.puesto }}
+						{% endif %}
+
+	                  	<small>Miembro desde {{ user.date_joined | date:"F, Y" }}</small>
+	                </p> 
+	              </li>
+
+	              <!-- Menu Body -->
+	              {% if request.user.is_staff %}
+	              <li class="user-body">
+	               <div class="row app-fix-user-menu">
+					
+	               
+	                  <div class="col-xs-4 text-center">
+	                    <a href="{% url 'seguridad:usuarios_lista' %}">
+	                    	<!-- <span class="label label-default app-label-link">Usuarios</span> -->
+	                    	<strong>Usuarios</strong>
+	                    </a>
+	                  </div>
+	                  <div class="col-xs-4 text-center">
+	                    <a href="{% url 'administracion:empresas_lista' %}">
+							<strong>Empresas</strong>
+	                    </a>
+	                  </div>
+	                  <div class="col-xs-4 text-center">
+	                    <a href="{% url 'administracion:contratos_lista' %}">
+	                    	<!-- <span class="label label-default app-label-link">Contratos</span> -->
+							<strong>Contratos</strong>
+	                    </a>
+	                  </div>
+	                
+	                
+	                </div>
+	              </li>
+	             {% endif %}
+				  <!--./ Menu Body -->	              
+
+	              <!-- Menu Footer-->
+	              <li class="user-footer">
+	                <div class="pull-left">
+	                  <a href="{% url 'seguridad:usuarios_perfil' user.pk %}" class="btn btn-default btn-flat" data-clave="{{ user.pk }}" id="perfil_id">
+	                  	<i class="fa fa-street-view"></i>
+	                  	Perfil
+	                  </a>
+	                </div>
+	                <div class="pull-right">
+	                  <a href="{% url 'seguridad:logout' %}" class="btn btn-danger btn-flat corem-boton-salir">
+	                  	<i class="fa fa-sign-out"></i>
+	                  	Salir
+	                  </a>
+	                </div>
+	              </li>
+	            </ul>
+	          </li>
+	          <!-- Control Sidebar Toggle Button -->
+	          <!-- <li>
+	            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+	          </li> -->
+	        </ul>
+	      </div>
+	    </nav>
+	  </header>
+
+	  <!-- Left side column. contains the logo and sidebar -->
+	  <aside class="main-sidebar">
+	    <!-- sidebar: style can be found in sidebar.less -->
+	    <section class="sidebar">
+
+	      <!-- Sidebar user panel -->
+	      <!-- <div class="user-panel">
+	        <div class="pull-left image">
+	          <img src="{% static 'libs/dist/img/user2-160x160.jpg' %}" class="img-circle" alt="User Image">
+	        </div>
+	        <div class="pull-left info">
+	          <p>Alexander Pierce</p>
+	          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+	        </div>
+	      </div> -->
+	      <!-- / .Sidebar user panel -->
+
+	      <!-- search form -->
+	      <!-- <form action="#" method="get" class="sidebar-form">
+	        <div class="input-group">
+	          <input type="text" name="q" class="form-control" placeholder="Search...">
+	              <span class="input-group-btn">
+	                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+	                </button>
+	              </span>
+	        </div>
+	      </form> -->
+	      <!-- /.search form -->
+
+	      <!-- sidebar menu: : style can be found in sidebar.less -->
+	      <ul class="sidebar-menu">
+	        <li class="header">MENU</li>
+
+			<!-- Activos -->
+			<li id="opt_dashboard"><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i> <span>Inicio</span></a></li>
+
+	        <!-- Activos -->
+	        <li class="treeview" id="tree_activos">
+	          <a href="#">
+	            <i class="fa fa-cogs"></i>
+	            <span>Activos</span>
+	            <span class="pull-right-container">
+	              <i class="fa fa-angle-left pull-right"></i>
+	            </span>
+	          </a>
+	          <ul class="treeview-menu">
+	            <li id="opt_equipos"><a href="{% url 'activos:equipos_lista' %}"><i class="fa fa-hdd-o"></i> Equipos</a></li>	            
+	            <li id="opt_odometros"><a href="{% url 'activos:odometros_lista' %}"><i class="fa fa-tachometer"></i> Odometros</a></li>
+				<li id="opt_mediciones">
+					<a href="">
+					<i class="fa fa-area-chart"></i> Mediciones
+						<span class="pull-right-container">
+	                    <i class="fa fa-angle-left pull-right"></i>
+	                    </span>
+					</a>
+					<ul class="treeview-menu" id="tree_act_mediciones">
+						<li id="opt_mediciones_resumen"><a href="{% url 'activos:equipos_mediciones' %}"><i class="fa fa-file-text-o"></i> Resumen</a></li>
+		            	<li id="opt_mediciones_captura"><a href="{% url 'activos:mediciones_capturar' %}"><i class="fa fa-pencil-square-o"></i> Captura</a></li>	                	
+	                </ul>
+				</li>
+				<!--
+				<li id="opt_reportes"><a href="{% url 'activos:reportes' %}"><i class="fa fa-file-excel-o"></i> Reportes</a></li>
+				-->
+				<li id="opt_act_conf">
+	                <a href="#"><i class="fa fa-cog"></i>Configuración
+	                    <span class="pull-right-container">
+	                    <i class="fa fa-angle-left pull-right"></i>
+	                    </span>
+	                </a>
+	                <ul class="treeview-menu" id="tree_act_conf">
+						<li id="opt_ubicaciones"><a href="{% url 'activos:ubicaciones_lista' %}"><i class="fa fa-map-marker"></i> Ubicaciones</a></li>
+		            	<li id="opt_odometros_udm"><a href="{% url 'activos:udms_odometro_lista' %}"><i class="fa fa-balance-scale"></i> UDM Odómetros</a></li>	                	
+		            	<li id="opt_odometros_tipo"><a href="{% url 'activos:tipo_odometro_lista' %}"><i class="fa fa-dot-circle-o"></i> Tipos Odómetros</a></li>	                	
+	                </ul>
+				</li>
+	          </ul>
+	        </li> 
+
+	        <!-- Inventarios -->
+	        <li class="treeview" id="tree_inventarios">
+	          <a href="#">
+	            <i class="fa fa-cubes"></i>
+	            <span>Inventarios</span>
+	            <span class="pull-right-container">
+	              <i class="fa fa-angle-left pull-right"></i>
+	            </span>
+	          </a>
+	          <ul class="treeview-menu">
+	            <li id="opt_articulos"><a href="{% url 'inventarios:articulos_lista' %}"><i class="fa fa-barcode"></i> Articulos</a></li>
+	            <li id="opt_entradas">
+
+		            <a href="#"><i class="fa fa-mail-reply"></i>Entradas
+						<span class="pull-right-container">
+	              			<i class="fa fa-angle-left pull-right"></i>
+	            		</span>
+		            </a>
+	            	<ul class="treeview-menu" id="tree_entradas">
+            			<li id="opt_entradas_saldo"><a href="{% url 'inventarios:entradas_saldoinicial_lista'%}"><i class="fa fa-circle-o"></i>Saldo Inicial</a></li>
+            			<li id="opt_entradas_compras"><a href="{% url 'inventarios:entradas_compras_lista'%}"><i class="fa fa-circle-o"></i>Compras</a></li>
+            			<li id="opt_entradas_ajustes"><a href="{% url 'inventarios:entradas_ajustes_lista' %}"><i class="fa fa-circle-o"></i>Ajustes</a></li>
+            			<li id="opt_entradas_traspasos"><a href="{% url 'inventarios:entradas_traspaso_lista' %}"><i class="fa fa-circle-o"></i>Traspaso</a></li>
+            			
+          			</ul>
+				</li>
+	            <li id="opt_salidas">
+
+	            	<a href="#"><i class="fa fa-mail-forward"></i>Salidas
+	            		<span class="pull-right-container">
+              			<i class="fa fa-angle-left pull-right"></i>
+            			</span>
+	            	</a>
+	            	<ul class="treeview-menu" id="tree_salidas">
+            			<li id="opt_salidas_personal"><a href="{% url 'inventarios:salidas_personal_lista'%}"><i class="fa fa-circle-o"></i>Personal</a></li>
+            			<li id="opt_salidas_orden"><a href="{% url 'inventarios:salidas_ordentrabajo_lista' %}"><i class="fa fa-circle-o"></i>Orden de Trabajo</a></li>
+            			<li id="opt_salidas_ajustes"><a href="{% url 'inventarios:salidas_ajustes_lista' %}"><i class="fa fa-circle-o"></i>Ajustes</a></li>
+            			<li id="opt_salidas_traspasos"><a href="{% url 'inventarios:salidas_traspaso_lista' %}"><i class="fa fa-circle-o"></i>Traspaso</a></li>
+          			</ul>
+	            </li>
+	            <li id="opt_todos_mov"><a href="{% url 'inventarios:movimientos_almacen_lista'%}"><i class="fa fa-exchange"></i>Cardex</a></li>
+                <li id="opt_inv_conf">
+                    <a href="#"><i class="fa fa-cog"></i>Configuración
+                        <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" id="tree_inv_conf">
+                        <li id="opt_almacenes"><a href="{% url 'inventarios:almacenes_lista' %}"><i class="fa fa-cube"></i> Almacenes</a></li>
+                        <li id="opt_articulo_udm"><a href="{% url 'inventarios:udms_articulo_lista' %}"><i class="fa fa-balance-scale"></i> UDM Articulos</a></li>
+                    </ul>
+                </li>	            
+	          </ul>
+	        </li> 
+
+	        <!-- Trabajos -->
+	        <li class="treeview" id="tree_trabajos">
+	          <a href="#">
+	            <i class="fa fa-wrench"></i>
+	            <span>Trabajos</span>
+	            <span class="pull-right-container">
+	              <i class="fa fa-angle-left pull-right"></i>
+	            </span>
+	          </a>
+	          <ul class="treeview-menu">
+	            <li id="opt_ordenes"><a href="{% url 'trabajos:ordenes_lista' %}"><i class="fa fa-file-o"></i> Ordenes Trabajo</a></li>
+	            <li id="opt_materiales">
+	            <a href="#"><i class="fa fa-tint"></i>Recursos Materiales
+	            	<span class="pull-right-container">
+              		<i class="fa fa-angle-left pull-right"></i>
+            		</span>
+	            </a>
+	            	<ul class="treeview-menu" id="tree_materiales">
+	            	
+            			<li id="opt_materiales_necesidades"><a href="{% url 'trabajos:necesidades' %}"><i class="fa fa-circle-o"></i>Necesidades</a></li>
+            			<li id="opt_materiales_solicitudes"><a href="{% url 'trabajos:solicitudes_compra_lista'%}"><i class="fa fa-circle-o"></i>Requisicion</a></li>
+          			</ul>
+	            </li>
+	            <!-- <li id="opt_tiempos"><a href="#"><i class="fa fa-users"></i> Hoja de tiempos </a></li> -->
+	          </ul>
+	        </li>
+
+	        <!-- Programaciones -->
+<!-- 	        <li class="treeview" id="tree_programaciones">
+	          <a href="#">
+	            <i class="fa fa-calendar"></i>
+	            <span>Programaciones</span>
+	            <span class="pull-right-container">
+	              <i class="fa fa-angle-left pull-right"></i>
+	            </span>
+	          </a>
+	          <ul class="treeview-menu">
+	            <li id="opt_a"><a href="{% url 'programaciones:programa_lista' %}"><i class="fa fa-calculator"></i>Programas </a></li>
+	            <li id="opt_a"><a href="#"><i class="fa fa-bell-o"></i>Ordenes Pendientes </a></li>
+	            <li id="opt_b"><a href="#"><i class="fa fa-clock-o"></i>Programaciones</a></li>
+	          </ul>
+	        </li> 	 -->	        
+
+	      </ul>
+	    </section>
+	    <!-- /.sidebar -->
+	  </aside>
+
+	  <!-- Content Wrapper. Contains page content -->
+	  <div class="content-wrapper">
+
+	  	{% block contenido %}
+
+		{% endblock contenido %}
+
+	  </div>
+	  <!-- /.content-wrapper -->
+
+	  <footer class="main-footer no-print">
+	    <div class="pull-right hidden-xs">
+	      <b>Version</b> 1.0
+	    </div>
+	    <strong>Copyright &copy; 2016-2020 <a href="http://www.nuvoil.com/">Nuvoil</a>.</strong> All rights
+	    reserved.
+	  </footer>
+
+	</div>
+	<!-- ./wrapper -->
+
+	<!-- jQuery 2.2.3 -->
+	<script src="{% static 'theme/plugins/jQuery/jquery-2.2.3.min.js' %}"></script>
+
+	<!-- jQuery UI 1.11.4 -->
+	<script src="{% static 'theme/plugins/jQueryUI/jquery-ui.min.js' %}"></script>
+
+	<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+	<script>
+	  $.widget.bridge('uibutton', $.ui.button);
+	</script>
+
+	<!-- Succinct -->
+	<script src="{% static 'libs/succinct/1.1.0/succinct.min.js' %}"></script>	
+
+	<!-- Bootstrap 3.3.6 -->
+	<script src="{% static 'theme/bootstrap/js/bootstrap.min.js' %}"></script>
+
+	<!-- FastClick -->
+	<script src="{% static 'theme/plugins/fastclick/fastclick.js' %}"></script>
+
+	<!-- AdminLTE App -->
+	<script src="{% static 'theme/dist/js/app.min.js' %}"></script>
+
+	<!-- Pace -->
+	<script src="{% static 'theme/plugins/pace/pace.min.js' %}"></script>
+
+	<!-- Alertify -->
+	<script src="{% static 'libs/alertifyjs/1.6.0/alertify.min.js' %}"></script>	
+
+	<!-- Moment JS  -->
+	<script src="{% static 'libs/moment.js/2.11.2/moment.min.js' %}"></script>	
+
+	<!-- CoreM - Master -->
+	<script src="{% static 'master.js' %}"></script>
+
+	{% block scripts %}
+
+	{% endblock scripts %}
+
+</body>
+</html>

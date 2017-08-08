@@ -1,0 +1,146 @@
+body {
+    font-size: 11.5px;
+}
+
+.header-logo {
+    /*width:50%;*/
+
+}
+
+    .logo {
+        width: 260px;
+        height: 60px;
+
+    }
+
+.header-descripcion {
+    text-align: center;
+    background-color: #F3F3F3;
+}
+
+    .contrato-desc {
+        margin: 0px;
+        padding: 0px;
+    }
+
+
+.datos-inicio {
+    border-collapse: collapse;
+    margin-left: 0px;
+}
+
+    .datos-inicio, td, th {
+        border: 1px solid #CCCCCC;
+        padding: 2px 0px 0px 2px;
+    }
+
+
+.datos-inicio-left, .datos-inicio-right {
+    background-color: #F3F3F3;
+}
+
+    .left-field { 
+        width: 260px;
+        
+    }
+    .right-label {
+        width: 40%;
+    }
+    .right-datos {
+        width: 5%;
+    }
+
+.datos-inicio-calidad {
+    width: 25%
+}
+
+    .datos-inicio-contenido {
+        width: 15%
+    }
+
+    .prueba {
+        width: 10px;
+        
+    }
+
+/*.datos-inicio-trabajo {
+    width: 800px;
+}*/
+
+.datos-inicio-left-labels, .datos-inicio-right-labels {
+    background-color: #F3F3F3;
+    font-weight: normal;
+}
+
+.titulo-reporte {
+    margin-top: 0px;
+
+    text-align: center;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding-top: 8px;
+}
+
+.detalle {
+    border: 1px solid black;
+}
+
+.actividad {
+    margin-top: 20px;
+
+}
+
+.comentario {
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+    .comentario p {
+        display: inline;
+    }
+    .comentario span {
+        font-size: 11px;
+    }
+
+
+.personal-title {
+    text-align: center;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding-top: 8px;
+}
+
+.personal-item {
+    font-size: 12.5px;
+}
+
+
+.datos-elaboracion {
+    border-collapse: collapse;
+    margin-left: 0px;
+    margin-top: 10px;
+}
+
+    .datos-elaboracion-label {
+        background-color: #F3F3F3;
+        text-align: left;    
+    }
+
+    .left {
+        width: 120px;
+    }
+
+    .right {
+        width: 120px;
+    }
+.folio-footer {
+    text-align: right;
+    margin-top: 6px;
+}
+
+.texto-encabezado {
+    font-size: 10px;
+}
+.texto-contrato {
+    font-size: 9px;
+    padding-top: 15px;
+}

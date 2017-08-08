@@ -1,0 +1,433 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} {{ operation }} Usuario {% endblock title %}
+
+{% block css %}
+
+	<!-- wysihtml5 -->
+	<link rel="stylesheet" href="{% static 'theme/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css' %}">
+
+	<!-- bootstrap datepicker -->
+	<link rel="stylesheet" href="{% static 'theme/plugins/datepicker/datepicker3.css' %}">
+
+{% endblock css %}	
+
+{% block contenido %}
+
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+	  <h1>
+	    <span id="titulo">Usuarios</span>
+	    <small>{{ operation }}</small>
+	  </h1>
+	  <ol class="breadcrumb">
+	    <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i> Inicio</a></li>
+	    <li><a href="{% url 'seguridad:usuarios_lista' %}">Usuarios</a></li>
+	    <li class="active">{{ operation }}</li>
+	  </ol>
+	</section>
+
+	<!-- Main content -->
+	<section class="content" id="contenido">
+
+		<div class="row">
+	        <div class="col-md-12">
+
+	          <!-- Formulario -->
+	          <div class="box box-primary">
+		            <div class="box-header with-border">
+		              <h3 class="box-title">Favor de proporcionar los siguientes datos:</h3>
+		            </div>
+	            	
+	            	<!-- /.box-header -->
+					<form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+		              <div class="box-body">
+
+							<div class="row">
+								
+								<!-- Datos Generales -->
+								<div class="col-sm-8">
+									
+									<!-- Clave y Contrasena -->
+									<div class="row">
+										<div class="col-sm-6">
+
+											<div class="form-group">
+
+											  	<label class="control-label">
+											  		Cuenta:
+											 	</label>
+
+		 										<div class="form-group input-group">
+									            	<div class="input-group-addon">
+									                	<i class="fa fa-user"></i>
+									            	</div>			
+									            	<input class="form-control input-sm" maxlength="30" value="{{ cuenta }}" type="text" disabled="">
+									            </div>									    
+											  
+											</div>
+
+										</div>
+
+										<div class="col-sm-6">
+
+											<div class="form-group {% if form.password.field.required %} has-warning {% endif %} {% if form.password.errors %} has-error {% endif %}">
+
+											  	<label class="control-label">
+											  		<i class="fa {% if form.password.field.required %} fa-asterisk {% endif %} {% if form.password.errors %} fa-asterisk {% endif %}"></i> 
+											  		{{ form.password.label }}
+											 	</label>
+
+		 										<div class="form-group input-group">
+									            	<div class="input-group-addon">
+									                	<i class="fa fa-key"></i>
+									            	</div>										
+													{{ form.password }}
+									            </div>									 	
+											    
+											    {% for error in form.password.errors %}
+											    <span class="help-block">{{ error }}</span>
+											    {% endfor %}
+											</div>
+
+										</div>											
+									</div>
+
+									<!-- Nombre y Apellido -->
+									<div class="row">
+										<div class="col-sm-6">
+
+											<div class="form-group {% if form.first_name.field.required %} has-warning {% endif %} {% if form.first_name.errors %} has-error {% endif %}">
+
+											  	<label class="control-label">
+											  		<i class="fa {% if form.first_name.field.required %} fa-asterisk {% endif %} {% if form.first_name.errors %} fa-asterisk {% endif %}"></i> 
+											  		{{ form.first_name.label }}
+											 	</label>
+											    {{ form.first_name }}
+											  
+											    {% for error in form.first_name.errors %}
+											    <span class="help-block">{{ error }}</span>
+											    {% endfor %}
+											</div>
+										</div>
+
+										<div class="col-sm-6">
+
+											<div class="form-group {% if form.last_name.field.required %} has-warning {% endif %} {% if form.last_name.errors %} has-error {% endif %}">
+
+											  	<label class="control-label">
+											  		<i class="fa {% if form.last_name.field.required %} fa-asterisk {% endif %} {% if form.last_name.errors %} fa-asterisk {% endif %}"></i> 
+											  		{{ form.last_name.label }} 
+											 	</label>
+											    {{ form.last_name }}
+											  
+											    {% for error in form.last_name.errors %}
+											    <span class="help-block">{{ error }}</span>
+											    {% endfor %}
+											</div>
+										</div>						
+									</div>
+
+									<!-- Email, Fecha Nacimiento -->
+									<div class="row">
+
+										<div class="col-sm-6">
+
+											<div class="form-group {% if form.email.field.required %} has-warning {% endif %} {% if form.email.errors %} has-error {% endif %}">
+
+											  	<label class="control-label">
+											  		<i class="fa {% if form.email.field.required %} fa-asterisk {% endif %} {% if form.email.errors %} fa-asterisk {% endif %}"></i> 
+											  		{{ form.email.label }} 
+											 	</label>
+											    
+											  
+												<div class="form-group input-group">
+									            	<div class="input-group-addon">
+									                	<i class="fa fa-envelope"></i>
+									            	</div>										
+													{{ form.email }}
+									            </div>
+
+
+											    {% for error in form.email.errors %}
+											    <span class="help-block">{{ error }}</span>
+											    {% endfor %}
+											</div>
+										</div>	
+
+										<div class="col-sm-6">
+
+											<div class="form-group {% if form_profile.fecha_nacimiento.field.required %} has-warning {% endif %} {% if form_profile.fecha_nacimiento.errors %} has-error {% endif %}">
+
+											  	<label class="control-label">
+											  		<i class="fa {% if form_profile.fecha_nacimiento.field.required %} fa-asterisk {% endif %} {% if form_profile.fecha_nacimiento.errors %} fa-asterisk {% endif %}"></i> 
+											  		{{ form_profile.fecha_nacimiento.label }}
+											 	</label>
+
+												<div class="form-group input-group">
+									            	<div class="input-group-addon">
+									                	<i class="fa fa-calendar"></i>
+									            	</div>										
+													{{ form_profile.fecha_nacimiento }}
+									            </div>
+
+											    {% for error in form_profile.fecha_nacimiento.errors %}
+											    <span class="help-block">{{ error }}</span>
+											    {% endfor %}
+											</div>
+										</div>	
+									</div>
+
+									<!-- Clave RH y Puesto -->
+									<div class="row">
+										<div class="col-sm-6">
+
+											<div class="form-group {% if form_profile.clave.field.required %} has-warning {% endif %} {% if form_profile.clave.errors %} has-error {% endif %}">
+
+											  	<label class="control-label">
+											  		<i class="fa {% if form_profile.clave.field.required %} fa-asterisk {% endif %} {% if form_profile.clave.errors %} fa-asterisk {% endif %}"></i> 
+											  		{{ form_profile.clave.label }}
+											 	</label>
+											    {{ form_profile.clave }}
+											  
+											    {% for error in form_profile.clave.errors %}
+											    <span class="help-block">{{ error }}</span>
+											    {% endfor %}
+											</div>
+
+										</div>
+
+										<div class="col-sm-6">
+
+											<div class="form-group {% if form_profile.puesto.field.required %} has-warning {% endif %} {% if form_profile.puesto.errors %} has-error {% endif %}">
+
+											  	<label class="control-label">
+											  		<i class="fa {% if form_profile.puesto.field.required %} fa-asterisk {% endif %} {% if form_profile.puesto.errors %} fa-asterisk {% endif %}"></i> 
+											  		{{ form_profile.puesto.label }} 
+											 	</label>
+											    {{ form_profile.puesto }}
+											  
+											    {% for error in form_profile.puesto.errors %}
+											    <span class="help-block">{{ error }}</span>
+											    {% endfor %}
+											</div>
+
+										</div>						
+									</div>
+																
+									<!-- Activo y Administrador  -->							
+									<div class="row">
+
+										<div class="col-sm-2">
+
+											<div class="checkbox">
+											
+												{% if form.is_active.field.required or form.is_active.errors %}
+													<label class="control-label">
+														<i class="fa fa-asterisk"></i> 
+													</label>
+												{% endif %}
+
+											 	<label>
+											 		{{ form.is_active }}
+											 		<span class="etiqueta-checkbox">
+											 			{{ form.is_active.label }} 
+											 		</span>
+											 	</label>
+
+											    {% for error in form.is_staff.errors %}
+											    <span class="help-block">{{ error }}</span>
+											    {% endfor %}
+											</div>									
+										</div>	
+
+										<div class="col-sm-2">
+
+											<div class="checkbox">
+											
+												{% if form.is_staff.field.required or form.is_staff.errors %}
+													<label class="control-label">
+														<i class="fa fa-asterisk"></i> 
+													</label>
+												{% endif %}
+
+											 	<label>
+											 		{{ form.is_staff }}	
+											 		<span class="etiqueta-checkbox">
+											 			{{ form.is_staff.label }}
+											 		</span>
+											 	</label>
+
+											    {% for error in form.is_staff.errors %}
+											    <span class="help-block">{{ error }}</span>
+											    {% endfor %}
+											</div>
+											
+										</div>
+										<div class="col-sm-2">
+											<div class="checkbox">
+											 	<label>
+
+											 		<input id="id_almacenista" name="almacenista" type="checkbox" {% if almacenista %} checked="checked"{% endif %}>
+											 		<span class="etiqueta-checkbox">
+											 			Almacenista 
+											 		</span>
+											 	</label>
+											</div>							
+									</div>				
+									</div>							
+
+									<!-- Comentario -->
+									<div class="row">
+
+										<div class="col-sm-12">
+
+											<div class="form-group {% if form_profile.comentarios.field.required %} has-warning {% endif %} {% if form_profile.comentarios.errors %} has-error {% endif %}">
+
+											  	<label class="control-label">
+											  		<i class="fa {% if form_profile.comentarios.field.required %} fa-asterisk {% endif %} {% if form_profile.comentarios.errors %} fa-asterisk {% endif %}"></i> 
+											  		{{ form_profile.comentarios.label }}
+											 	</label>
+											    {{ form_profile.comentarios }}
+											  
+											    {% for error in form_profile.comentarios.errors %}
+											    <span class="help-block">{{ error }}</span>
+											    {% endfor %}
+											</div>
+
+										</div>					
+									</div>									
+								</div>								
+
+								<!-- Fotos  -->
+								<div class="col-sm-4">
+
+									<div class="col-sm-8">
+
+									  	<label class="control-label">
+									  		<i class="fa {% if form_profile.imagen.field.required %} fa-asterisk {% endif %} {% if form_profile.imagen.errors %} fa-asterisk {% endif %}"></i> 
+									  		Imagen:
+									 	</label>	
+
+
+										{% if imagen %}
+											<img id="img_preview" class="user-image img-responsive img-thumbnail" src="{{ imagen }}" alt="IFBD">
+										{% else %}
+											<img id="img_preview" class="user-image img-responsive img-thumbnail" src="{% static 'images/decoradores/no-image-user.jpg' %}" alt="User Image">
+										{% endif %}	 
+
+										<div class="form-group {% if form_profile.imagen.field.required %} has-warning {% endif %} {% if form_profile.imagen.errors %} has-error {% endif %}">
+
+										    {{ form_profile.imagen }}
+										  
+										    {% for error in form_profile.imagen.errors %}
+										    <span class="help-block">{{ error }}</span>
+										    {% endfor %}
+										</div>																 		
+									</div>
+
+									<div class="col-sm-8">
+
+									  	<label class="control-label">
+									  		<i class="fa {% if form_profile.firma.field.required %} fa-asterisk {% endif %} {% if form_profile.firma.errors %} fa-asterisk {% endif %}"></i> 
+									  		Firma:
+									 	</label>	
+
+
+										{% if firma %}
+											<img id="firma_preview" class="user-image img-responsive img-thumbnail" src="{{ firma }}" alt="IFBD">
+										{% else %}
+											<img id="firma_preview" class="user-image img-responsive img-thumbnail" src="{% static 'images/decoradores/no-image.jpg' %}" alt="User Signature">
+										{% endif %}	 
+
+										<div class="form-group {% if form_profile.firma.field.required %} has-warning {% endif %} {% if form_profile.firma.errors %} has-error {% endif %}">
+
+										    {{ form_profile.firma }}
+										  
+										    {% for error in form_profile.firma.errors %}
+										    <span class="help-block">{{ error }}</span>
+										    {% endfor %}
+										</div>																 		
+									</div>									
+								</div>
+
+							</div>							
+							
+		              
+					  </div> <!-- /.box-body -->
+
+		              <div class="box-footer">
+	              		<a class="btn btn-default" href="{% url 'seguridad:usuarios_lista' %}">
+	              			<i class="fa fa-arrow-circle-left"></i>
+	              			Regresar
+	              		</a>
+
+      					<button type="submit" class="btn btn-success pull-right">
+      						<i class="fa fa-save"></i>
+      						Guardar
+      					</button>
+		              </div> <!-- /.box-footer -->
+
+	            </form>
+	          </div>
+	          <!-- /.box -->
+
+	          <p>
+				{% if form.errors %}
+				    {% for field in form %}
+				        {% for error in field.errors %}
+				            <div class="alert alert-danger">
+				                <strong>{{ error|escape }}</strong>
+				            </div>
+				        {% endfor %}
+				    {% endfor %}
+				    {% for error in form.non_field_errors %}
+				        <div class="alert alert-danger">
+				            <strong>{{ error|escape }}</strong>
+				        </div>
+				    {% endfor %}
+				{% endif %}         
+
+				{% if form_profile.errors %}
+				    {% for field in form_profile %}
+				        {% for error in field.errors %}
+				            <div class="alert alert-danger">
+				                <strong>{{ error|escape }}</strong>
+				            </div>
+				        {% endfor %}
+				    {% endfor %}
+				    {% for error in form_profile.non_field_errors %}
+				        <div class="alert alert-danger">
+				            <strong>{{ error|escape }}</strong>
+				        </div>
+				    {% endfor %}
+				{% endif %}					
+	          </p>
+
+	        </div>			
+
+		</div>
+
+	</section>
+	<!-- /. Main content -->
+
+{% endblock contenido %}
+
+{% block scripts %}
+
+	<!-- WYSIHTML5 -->
+	<script src="{% static 'theme/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js' %}"></script>
+
+	<!-- bootstrap datepicker -->
+	<script src="{% static 'theme/plugins/datepicker/bootstrap-datepicker.js' %}"></script>
+	<script src="{% static 'theme/plugins/datepicker/locales/bootstrap-datepicker.es.js' %}"></script>
+	
+	<!-- Moment -->
+	<script src="{% static 'libs/moment.js/2.11.2/moment.min.js' %}"></script>
+
+	<!-- CoreM -->
+	<script src="{% static 'usuario/formulario.js' %}"></script>
+
+{% endblock scripts %}

@@ -1,0 +1,169 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% load humanize %}
+
+{% block title %} Necesidades {% endblock title %}
+
+{% block css %}
+
+{% endblock css %}
+
+{% block contenido %}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+        <span id="titulo">Reporte de Necesidades</span>
+        <small>{{ operation }}</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i> Inicio</a></li>
+            <li>Necesidades</li>
+        </ol>
+    </section>
+
+    <section class="content" id="contenido">
+        <div class="row">
+        <div class="col-xs-12">
+
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Faltantes por Stock de Seguridad:</h3>
+
+              <div class="box-tools">
+
+                <a href="{% url 'trabajos:necesidades_stock_seg' %}" class="btn bg-olive btn-sm">
+                  <i class="fa fa-file-excel-o"></i>
+                  Exportar
+                </a>
+
+              </div>
+            </div>
+
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover">
+
+                {% if necesidades_stock %}
+                  <tr>
+                    <th>Articulo</th>
+                    <th>URL</th>
+                    <th>Stock Seguridad</th>
+                    <th>Cantidad Actual</th>
+                    <th>Faltan</th>
+                  </tr>
+                  {% for registro in necesidades_stock %}
+
+                      <tr>
+                        <td>
+
+                          <a href="{% url 'inventarios:articulos_editar' registro.pk %}">
+                            {{registro.descripcion}}
+                          </a>
+                        </td>
+                        <td>
+                        {% if registro.url %}
+                        <a href="{{ registro.url }}" target="_blank">{{ registro.url }}</a>
+                        {% endif %}
+                        </td>
+                        <td>{{registro.stock_seguridad|floatformat:2 }}</td>
+                        <td>{{registro.cantidad_stock|floatformat:2}}</td>
+                        <td>
+                          <strong>
+                          {{ registro.faltantes_stock_seguridad|floatformat:2 }}
+                          </strong>
+                        </td>
+                      </tr>
+                  {% endfor %}
+                {% else %}
+
+                    <tr>
+                      <th>No se encontraron necesidades</th>
+                    </tr>                
+
+                {% endif %}
+              </table>
+            </div>
+          </div>
+          <!-- /.box -->
+
+          <div class="callout callout-warning">
+            <h4>Nota</h4>
+            A continuacion aparecen los materiales que hacen faltan para realizar las Ordenes de Trabajo que esten en estado "ABIERTA"
+            
+          </div>
+
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Faltantes por necesidades de OT:</h3>
+
+              <div class="box-tools">
+
+                <a href="{% url 'trabajos:necesidades_ot' %}" class="btn bg-olive btn-sm">
+                  <i class="fa fa-file-excel-o"></i>
+                  Exportar
+                </a>
+
+              </div>
+            </div>
+
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover">
+                {% if necesidades_ot %}
+                  <tr>
+                    <th>Articulo</th>
+                    <th>URL</th>
+                    <th>Necesidad</th>
+                    <th>Cantidad Actual</th>
+                    <th>Faltan</th>
+                    <th></th>
+                  </tr>
+                  {% for registro in necesidades_ot %}
+
+                      <tr>
+                        <td>
+                          <a href="{% url 'inventarios:articulos_editar' registro.pk %}">
+                            {{ registro.descripcion }}  
+                          </a>
+                        </td>
+                        <td>
+                          {% if registro.url %}
+                          <a href="{{ registro.url}}" target="_blank">{{ registro.url}}</a>
+                          {% endif %}
+                        </td>
+                        <td>{{ registro.sum_cantidad_estimada }}</td>
+                        <td>{{ registro.cantidad_stock|floatformat:2 }}</td>
+                        <td> <strong> {{ registro.faltante|floatformat:2 }} </strong></td>
+                        <td>
+                          <a href="{% url 'trabajos:necesidades_detalle' registro.pk %}" class="btn btn-warning">
+                            <i class="fa fa-wrench"></i>
+                            Detalle
+                          </a>
+                        </td>
+                      </tr>
+
+                  {% endfor %}
+                {% else %}
+
+                    <tr>
+                      <th>No se encontraron necesidades</th>
+                    </tr>                
+
+                {% endif %}                  
+              </table>
+            </div>
+          
+          </div>          
+        </div>
+      </div>  
+    </section>
+
+
+{% endblock contenido %}
+
+{% block scripts %}
+
+{% endblock scripts %}

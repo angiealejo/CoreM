@@ -1,0 +1,106 @@
+
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% load humanize %}
+
+{% block title %} Mensajes {% endblock title %}
+
+{% block contenido %}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        <span id="titulo">Mensajes</span>
+        <small>Historial</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i> Inicio</a></li>
+        <li class="active">Mensajes historial</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content" id="contenido">
+
+        <div class="row">
+            <div class="col-md-12">
+                <p>
+                    <form action="" method="GET">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="q" placeholder="escribe texto a buscar" value="{{ request.GET.q }}">
+                            
+                            <span class="input-group-btn">
+                              <button type="submit" id="boton_buscar" class="btn btn-info btn-flat">
+                                <i class="fa fa-search"></i>
+                                Buscar
+                              </button>
+                            </span>
+                        </div>
+                    </form>                 
+                </p>
+
+                {% if mensajes %}
+
+                    {% for mensaje in mensajes %}
+                        <div class="box box-widget">
+                            <div class="box-header with-border">
+                                <div class="user-block">
+                                    {% if mensaje.usuario.profile.imagen %}
+                                        <img class="img-circle" src="{{ MEDIA_URL }}{{ mensaje.usuario.profile.imagen }}" alt="User Image">
+                                    {% else %}
+                                        <img class="img-circle img-responsive img-thumbnail" src="{% static 'images/decoradores/no-image-user.jpg' %}" alt="User Image">
+                                    {% endif %}
+
+                                    <!-- <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image"> -->
+                                    <span class="username"><a href="{% url 'seguridad:usuarios_perfil' mensaje.usuario.pk %}">{{ mensaje.usuario.get_full_name }}</a></span>
+                                    <span class="description">Mensaje agregado - {{ mensaje.created_date|naturaltime }} </span>
+                                </div>
+                                <!-- /.user-block -->
+                            </div>
+                            <!-- /.box-header -->
+                            
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="box-body">
+                                        {{ mensaje.texto|safe }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                    
+
+                    {% endfor %}      
+
+                    <div class="box-footer text-center">
+                        <ul class="pagination pagination-sm no-margin">
+                            {% if mensajes.has_previous %}
+                                <li><a href="?{{ page_request_var }}={{ mensajes.previous_page_number }}&q={{ request.GET.q }}">&laquo;</a></li>
+                            {% endif %}
+
+                            {% for i in mensajes.paginator.page_range %}
+                                <li {% if mensajes.number == i %} class="active" {% endif %}>
+                                    <a href="?page={{i}}&q={{ request.GET.q }}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+
+                            {% if mensajes.has_next %}
+                                <li><a href="?page={{ mensajes.next_page_number }}&q={{ request.GET.q }}">&raquo;</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+
+                {% else %}
+                    <div>
+                        <h3 class="grid-empy">No se encontraron mensajes</h3>
+                    </div>
+                {% endif %} 
+
+            </div>            
+        </div>
+
+    </section>
+    <!-- /. Main content -->
+
+{% endblock contenido %}

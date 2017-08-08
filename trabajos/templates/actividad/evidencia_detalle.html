@@ -1,0 +1,116 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% load humanize %}
+
+{% block title %} Actividades - Evidencia - Detalle {% endblock title %}
+
+{% block css %}
+
+    <!-- WYSIHTML5 -->
+    <link rel="stylesheet" href="{% static 'theme/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css' %}">
+
+{% endblock css %}  
+
+{% block contenido %}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        <span id="titulo">Ordenes de Trabajo</span>
+        <small>Evidencia Detalle</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i>Inicio</a></li>
+        <li><a href="{% url 'trabajos:ordenes_lista' %}">Ordenes</a></li>
+        <li><a href="{% url 'trabajos:actividades_lista' orden_id %}">Actividades</a></li>
+        <li><a href="{% url 'trabajos:actividad_detalle' orden_id actividad_id %}">Evidencia</a></li>
+        <li class="active">Detalle</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content" id="contenido">
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <input id="id_equipo" type="hidden" value="{{ id }}">
+                
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Evidencia con clave <strong>{{ form.instance.id }}</strong> de la actividad <strong>{{ actividad_id }}</strong> de la orden <strong>{{ orden_id }}</strong> </h3>
+                    </div>                                  
+                </div>
+
+                <!-- Panel: Modificar Detalle -->
+                <div class="box box-solid box-primary" id="id_panel">
+
+                    <!-- Cabecera -->
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Modificar Evidencia</h3>
+                    </div>
+
+                    
+                    <form role="form" action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                        <!-- Cuerpo -->
+                        <div class="box-body">
+
+                            <div class="row">
+
+                                <div class="col-sm-10 col-md-offset-1">
+
+                                    {% for field in form %}
+                                    <div class="form-group {% if field.field.required %} has-warning {% endif %} {% if field.errors %} has-error {% endif %}">
+                                            
+                                        <label for="{{ field.label }}">
+                                            <i class="fa {% if field.field.required %} fa-asterisk {% endif %} {% if field.field.errors %} fa-asterisk {% endif %}"></i>
+                                                {{ field.label }}
+                                        </label>
+
+                                        {{ field }}
+                                            
+                                        {% for error in field.errors %}
+                                        <div class="help-block text-right" id="{{ field.label }}-error">
+                                                {{ error }}
+                                            </div>
+                                        {% endfor %}
+                                        </div>
+                                    {% endfor %}    
+
+                                </div>
+                            </div>                  
+
+                        </div> 
+
+                        <!-- Pie -->
+                        <div class="box-footer">
+                            <div class="col-xs-12">
+                                <button type="submit"  class="btn btn-success pull-right">
+                                    <i class="fa fa-save"></i>
+                                    Modificar
+                                </button>
+                            </div>
+                        </div> 
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /. Main content -->
+
+</section>
+<!-- /. Main content -->
+
+{% endblock contenido %}
+
+{% block scripts %}
+
+    <!-- WYSIHTML5 -->
+    <script src="{% static 'theme/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js' %}"></script>
+
+    <!-- CoreM -->
+    <script src="{% static 'actividad/evidencia_detalle.js' %}"></script>
+
+{% endblock scripts %}  

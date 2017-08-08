@@ -1,0 +1,182 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} CoreM - Ordenes de Trabajo {% endblock title %}
+
+{% block css %}
+
+	<!-- Kendo -->
+	<link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.rtl.min.css' %}"/>
+	<link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.common-bootstrap.min.css' %}"/>
+	<link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.bootstrap.min.css' %}"/>
+
+	<!-- Select2 -->
+	<link rel="stylesheet" href="{% static 'theme/plugins/select2/select2.min.css' %}"/>
+
+	<!-- bootstrap datepicker -->
+	<link rel="stylesheet" href="{% static 'theme/plugins/datepicker/datepicker3.css' %}">
+
+	<!-- CoreM -->
+	<link rel="stylesheet" href="{% static 'grid.css' %}"/>
+
+{% endblock css %}
+
+{% block contenido %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+	<span id="titulo">Ordenes de Trabajo</span>
+	<small>Consulta</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i> Inicio</a></li>
+		<li class="active">Ordenes de Trabajo</li>
+	</ol>
+</section>
+<!-- Main content -->
+<section class="content" id="contenido">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- Filtros -->
+			<div class="box box-solid box-info" id="id_panel">
+				<div class="box-header with-border">
+					<h3 class="box-title">Filtros</h3>
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+					</div>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+
+					<div class="row">
+						<div class="form-group col-sx-12 col-sm-2 col-md-2">
+							<label for="{{ form.numero_orden.id_for_label }}">Número de Orden</label>
+							{{ form.numero_orden }}
+						</div>
+						<div class="form-group col-sx-12 col-sm-4 col-md-4">
+							<label for="{{ form.equipo.id_for_label }}">Equipo</label>
+							{{ form.equipo }}
+						</div>
+						<div class="form-group col-sx-12 col-sm-3 col-md-3">
+							<label for="{{ form.descripcion.id_for_label }}">Descripción</label>
+							{{ form.descripcion }}
+						</div>
+						<div class="form-group col-sx-12 col-sm-3 col-md-3">
+							<label for="{{ form.especialidad.id_for_label }}">Especialidad</label>
+							{{ form.especialidad }}
+						</div>
+					</div>
+
+					<div class="row">
+
+						<div class="form-group col-sx-12 col-sm-4 col-md-4">
+							<label for="{{ form.responsable.id_for_label }}">Responsable</label>
+							{{ form.responsable }}
+						</div>
+
+						<div class="form-group col-sx-12 col-sm-4 col-md-4">
+							<label for="{{ form.tipo.id_for_label }}">Tipo</label>
+							{{ form.tipo }}
+						</div>
+						<div class="form-group col-sx-12 col-sm-4 col-md-4">
+							<label for="{{ form.estado.id_for_label }}">Estado</label>
+							{{ form.estado }}
+						</div>							
+					</div>
+					<div class="row">
+
+						<div class="form-group col-sx-12 col-sm-4 col-md-4">
+							<label for="{{ form.solicitante.id_for_label }}">Solicitante</label>
+							{{ form.solicitante }}
+						</div>
+
+						<div class="form-group input-group-sm col-sx-12 col-sm-4 col-md-4 ">
+							<label for="fecha_inicio">Creada del:</label>
+							<div class="form-group input-group">
+				                <div class="input-group-addon">
+				                	<i class="fa fa-calendar"></i>
+				                </div>
+				                {{ form.fecha_inicio }}
+				            </div>
+						</div>
+						<div class="form-group input-group-sm col-sx-12 col-sm-4 col-md-4">
+							<label for="fecha_fin">Al:</label>
+							<div class="form-group input-group">
+				            	<div class="input-group-addon">
+				                	<i class="fa fa-calendar"></i>
+				            	</div>
+				                {{ form.fecha_fin }}
+				            </div>						
+				        </div>
+
+					</div>
+				</div>
+				<!-- /.box-body -->
+				
+				<div class="box-footer">
+					<button type="button" id="boton_limpiar" class="btn btn-default">
+						<i class="fa fa-eraser"></i>
+						Limpiar
+					</button>
+					<button type="button" id="boton_buscar" class="btn btn-info pull-right">
+						<i class="fa fa-search"></i>
+						Buscar
+					</button>
+				</div>
+				<!-- /.box-footer -->
+
+			</div>
+			<!-- /.box -->
+		</div>
+	</div>
+	<div class="box box-info">
+		<div class="box-header box-header-border">
+			<h3 class="box-title">Registros</h3>
+			<div class="box-tools pull-right">
+				<button type="button" id="boton_nuevo" class="btn bg-purple btn-sm">
+					<i class="fa fa-plus-circle"></i>
+					Nuevo
+				</button>
+				<button type="button" id="boton_exportar" class="btn bg-olive btn-sm">
+				<i class="fa fa-file-excel-o"></i>
+				Exportar
+				</button>
+			</div>
+		</div>
+		<div id="grid_principal">
+		</div>
+	</div>
+	<!-- /.box -->
+</section>
+<!-- /. Main content -->
+{% endblock contenido %}
+
+{% block scripts %}
+
+	<!--JSZIP -->
+	<script src="{% static 'libs/kendo/2015.2.624/js/jszip.min.js' %}"></script>
+
+	<!-- Kendo Js -->
+	<script src="{% static 'libs/kendo/2015.2.624/js/cultures/kendo.culture.es-MX.min.js' %}"></script>
+	<script src="{% static 'libs/kendo/2015.2.624/js/kendo.web.min.js' %}"></script>
+
+	<!-- Select2 -->
+	<script src="{% static 'theme/plugins/select2/select2.full.min.js' %}"></script>
+
+	<!-- InputMask -->
+	<script src="{% static 'theme/plugins/input-mask/jquery.inputmask.js' %}"></script>
+	<script src="{% static 'theme/plugins/input-mask/jquery.inputmask.date.extensions.js' %}"></script>
+	<script src="{% static 'theme/plugins/input-mask/jquery.inputmask.extensions.js' %}"></script>
+
+	<!-- bootstrap datepicker -->
+	<script src="{% static 'theme/plugins/datepicker/bootstrap-datepicker.js' %}"></script>
+	<script src="{% static 'theme/plugins/datepicker/locales/bootstrap-datepicker.es.js' %}"></script>
+	
+	<!-- Moment -->
+	<script src="{% static 'libs/moment.js/2.11.2/moment.min.js' %}"></script>
+
+	<!-- CoreM -->
+	<script src="{% static 'orden_trabajo/lista.js' %}"></script>
+
+{% endblock scripts %}

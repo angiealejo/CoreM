@@ -1,0 +1,40 @@
+{% load static from staticfiles %}
+
+{% load filename %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Mantenimiento CoreM | Reporte</title>
+
+    <style>
+        @page {
+
+            @frame header_frame { 
+                -pdf-frame-content: header_content;
+                left: 20pt; width: 555pt; top: 20pt; height: 300pt;
+            }
+            @frame content_frame {
+                left: 20pt; width: 555pt; top: 255pt; height: 515pt;
+            }
+            @frame footer_frame {
+                -pdf-frame-content: footer_content;
+                left: 20pt; width: 555pt; top: 770pt; height: 60pt;
+            }            
+        }
+    </style>
+
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="{% static 'libs/bootstrap/2.2.1/bootstrap.min.css' %}">
+
+    <!-- corem -->
+    <link rel="stylesheet" href="{% static 'orden_trabajo/reporte/reporte_pdf.css' %}">
+    
+</head>
+<body>
+
+
+    
+</body>
+</html>       

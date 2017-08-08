@@ -1,0 +1,370 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} CoreM - Captura {% endblock title %}
+
+{% block css %}
+    <!-- Kendo -->
+    <link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.rtl.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.common-bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'libs/kendo/2015.2.624/styles/kendo.bootstrap.min.css' %}"/>
+    
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{% static 'theme/plugins/select2/select2.min.css' %}"/>
+
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="{% static 'theme/plugins/datepicker/datepicker3.css' %}">
+    <!-- bootstrap timepicker -->
+    <link rel="stylesheet" href="{% static 'theme/plugins/timepicker/bootstrap-timepicker.css' %}">
+    <!-- CoreM -->
+    <link rel="stylesheet" href="{% static 'grid.css' %}"/>
+
+{% endblock css %}
+
+{% block contenido %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+    <span id="titulo">Captura</span>
+    <small>Consulta</small>
+
+    </h1>
+    {% if equipo %} <h4 id="equipo_texto">Equipo: ({{ equipo.tag}}) {{ equipo.descripcion }}</h4>
+            {% endif %}
+    <ol class="breadcrumb">
+        <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i> Inicio</a></li>
+        <!--<li class="active"><a href="{% url 'activos:equipos_mediciones' %}">Mediciones</a></li>-->
+        <li class="active">Captura</li>
+</section>
+<!-- Main content -->
+<section class="content" id="contenido">
+
+    <!-- Filtros -->
+    <div class="row">
+        <div class="col-sm-12">
+            
+            <div class="box box-solid box-info" id="id_panel">
+                <!-- box-header -->
+                <div class="box-header with-border">
+                    <h3 class="box-title">Filtros</h3> 
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <form role="form" action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                    <!-- box body -->
+                    <div class="box-body">     
+                        <div class="row">
+                            <input class="hidden" type="text" name="equipo_id" id="equipo_id" value="{{ equipo.pk }}">
+                            <div class="form-group col-sx-12 col-sm-6 col-md-4">        
+                                <label>Tipo de Equipo</label>  
+                                {{ form.tipo_equipo }}
+                            </div>
+                            <div class="form-group col-sx-12 col-sm-6 col-md-4 select2--fix">        
+                                <label>Equipo</label>  
+                                {{ form.equipo }}
+                                
+                            </div>
+                            <div class="form-group col-sx-12 col-sm-6 col-md-4">        
+                                <label>Tipo de Odómetro</label>  
+                                {{ form.tipo }}
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sx-12 col-sm-6 col-md-6">        
+                                <label>Fecha Inicio:</label>  
+                                {{ form.fecha_inicio }}
+                            </div>
+                            <div class="form-group col-sx-12 col-sm-6 col-md-6">
+                                <label>Fecha Fin:</label>
+                                {{ form.fecha_fin}}                   
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <!-- box-footer -->
+                    <div class="box-footer">
+                        <button type="button" id="boton_limpiar" class="btn btn-default">
+                            <i class="fa fa-eraser"></i>
+                            Limpiar
+                        </button>
+                        <button type="submit" name="buscar" id="boton_buscar" class="btn btn-info pull-right">
+                            <i class="fa fa-search"></i>
+                            Buscar
+                        </button>
+                    </div>
+                    <!-- /.box-footer --> 
+            </div>
+        </div>
+    </div>
+    <!-- body -->
+    <div class="box box-info">
+        <div class="box-header box-header-border">
+            <h3 class="box-title">Mediciones</h3>
+            <div class="box-tools pull-right">
+                <button type="submit" class="btn bg-olive btn-sm">
+                    <i class="fa fa-file-excel-o"></i>
+                    Exportar
+                </button>
+                </form>
+            </div>
+        </div>  
+
+        <div class="box-body table-responsive"> 
+            
+            <table class="table table-bordered table-stripped">
+            <tr>
+                <td width="10%"><strong>Fecha</strong>
+                </td>
+                {% for odometro in odometros %}
+                    <td class="titulo-odometro" data-odometro="{{ odometro.descripcion }}"data-id="{{ odometro.id }}">
+                        <p><strong>{{ odometro.descripcion }}</strong></p>
+                        <p class="corem-text-medium">{{ odometro.udm }}</p>
+                    </td>
+                {% endfor %}
+                
+            </tr>
+            {% for nodo in lista %}
+                <tr>
+                    <td>{{nodo.fecha}}</td>
+                    {% for n in nodo.lista_odo %}
+                        <td class="odometro" data-id-odo="{{ n.id_odo}}" data-odometro="{{ n.odometro_descripcion }}" data-udm="{{ n.odometro_udm }}" data-acu="{{ n.odometro_acumulado }}"data-fecha="{{ nodo.fecha }}" data-id-med="{{ n.id_med}}" data-fecha = "{{n.fecha}}">
+                        <!--<a class="enlace" href="">
+                        <strong></strong></a>-->
+                        <p class="corem-text-normal">{{ n.lectura }}</p>
+                        </td>
+                    {% endfor %} 
+                </tr>
+            {% endfor %}  
+                         
+            </table>
+        </div>
+    </div> 
+    <!-- ./body -->
+    <!-- modal-content -->
+
+     <div class="modal fade" id="modal_nuevo" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true">
+        <div class="modal-dialog modal-default">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Nueva Medición</h4>
+                    <strong><span id="id_udm"></span></strong>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="row"> {% csrf_token %}
+                        <input type="text" class="hidden" id="id_eq" value="">
+                        <input type="text" class="hidden" id="id_odo" value="">
+                        
+                        <div class="col-sm-10 col-md-offset-1">
+                            <div id="fecha_contenedor" class="form-group has-warning">
+                                <strong id="odometro_texto"></strong>
+                                <h5 id="id_udm"></h5>
+                                <strong id="fecha_texto"></strong>
+
+                                <span class="help-block hidden" id="fecha_mensaje">Este campo es requerido.</span>
+                                <!-- /.input group -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10 col-md-offset-1">
+                            <div id="hora_contenedor" class="form-group has-warning">
+
+                                <label for="hora">
+                                    <i class="fa fa-asterisk"></i>
+                                    <label for="id_hora">Hora</label>
+                                </label>
+
+                                <div class="input-group bootstrap-timepicker timepicker">
+                                    <div class="input-group-addon">
+                                        <i class="glyphicon glyphicon-time"></i>
+                                    </div>
+                                    <input id="id_hora" type="text" class="form-control input-small pull-right ">
+                                </div>
+
+                                <span class="help-block hidden" id="hora_mensaje">Este campo es requerido.</span>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class="col-sm-10 col-md-offset-1">
+                            <div id="lectura_contenedor" class="form-group has-warning">
+                                <label for="lectura">
+                                    <i class="fa fa-asterisk"></i>
+                                    <label for="id_lectura">Lectura</label>
+                                </label>
+                                <input type="number" min="0" id="id_lectura" class="form-control">
+                                <span class="help-block hidden"  id="lectura_mensaje">Este campo es requerido.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10 col-md-offset-1">
+                            <div id="hora_contenedor" class="form-group">
+
+                                <label for="hora">
+                                    <label for="id_observaciones">Observaciones</label>
+                                </label>
+
+                                
+                                <input id="id_observaciones" type="text" class="form-control input-sm">
+                                <span class="help-block hidden" id="observaciones_mensaje">Este campo es requerido.</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="modal-footer">
+                    <!--<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                        <i class="fa fa-close"></i>
+                        Cerrar
+                    </button>
+                    <button id="boton_historial" type="button" class="btn btn-primary pull-left" >
+                        <i class="fa fa-clock-o"></i>
+                        Ver Historial
+                    </button>-->
+                    <button type="button" id="boton_guardar" class="btn btn-success">
+                        <i class="fa fa-save"></i>
+                        Guardar
+                    </button>
+                </div>
+            </div>
+                <!-- /.modal-content -->
+        </div>
+    </div>
+    <!-- /.modal-content -->
+    <!-- modal historico-->
+    <div class="modal fade" id="modal_historico" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-default " id="modal_contenido">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Histórico</h4>
+                </div>
+                
+                <div class="modal-body">
+                    <!-- Filtros -->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 class="box-title">Equipo: <strong>({{ equipo.tag }}) {{ equipo.descripcion }}</strong>.</h3>
+                            <h3 class="box-title" id="odo_texto">Odómetro: </h3>
+                            <div class="box box-solid box-info" id="id_panel">
+                                <!-- box-header -->
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Filtros</h3> 
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <!-- /.box-header -->
+                                    <!-- box body -->
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="form-group col-sx-12 col-sm-6 col-md-6">        
+                                                <label>Fecha Inicio:</label>  
+                                                <input type="text" class="form-control input-sm" id="fecha_inicio" data-date-format="yyyy-mm-dd">
+                                            </div>
+                                            <div class="form-group col-sx-12 col-sm-6 col-md-6">
+                                                <label>Fecha Fin:</label>
+                                                <input type="text" class="form-control input-sm" id="fecha_fin" data-date-format="yyyy-mm-dd">                   
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.box-body -->
+                                    <!-- box-footer -->
+                                    <div class="box-footer">
+                                        <button type="button" id="modal_btn_limpiar" class="btn btn-default">
+                                            <i class="fa fa-eraser"></i>
+                                            Limpiar
+                                        </button>
+                                        <button type="button" name="buscar" id="modal_btn_buscar" class="btn btn-info pull-right">
+                                            <i class="fa fa-search"></i>
+                                            Buscar
+                                        </button>
+                                    </div>
+                                    <!-- /.box-footer --> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input class="hidden" type="text" id="fecha_inicio" value="{{ fecha_inicio|date:"d/m/Y" }}" data-date-format='yyyy-mm-dd'>
+                            <input class="hidden" type="text" id="fecha_fin" value="{{ fecha_fin|date:"d/m/Y" }}" data-date-format='yyyy-mm-dd'>
+                            <input class="hidden" type="text" id="odometro" value="{{ odometro.pk }}">
+                            <input class="hidden" type="text" id="equipo" value="{{ equipo.pk }}">
+                            <input class="hidden" type="text" id="eq_texto" value="{{ equipo.tag }}">
+                            <input class="hidden" type="text" id="usuario" value="{{ request.user.profile.pk }}">
+
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="box box-info">
+                                        <div class="box-header box-header-border">
+                                            <h3 class="box-title">Mediciones</h3>
+                                            <div class="box-tools pull-right">
+                                                <!--<button type="button" id="boton_nuevo" class="btn bg-purple btn-sm">
+                                                <i class="fa fa-plus-circle"></i>
+                                                Nuevo
+                                                </button>-->
+                                                <button type="button" id="boton_exportar" class="btn bg-olive btn-sm">
+                                                <i class="fa fa-file-excel-o"></i>
+                                                Exportar
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div id="grid_principal">
+                                        </div>
+                                    </div>      
+                                </div>
+                            </div>  
+                        </div>
+                    </div> 
+                    
+                </div>
+
+                <div class="modal-footer">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /. Main content -->
+{% endblock contenido %}
+
+{% block scripts %}
+    <!--JSZIP -->
+    <script src="{% static 'libs/kendo/2015.2.624/js/jszip.min.js' %}"></script>
+    
+    <!-- Kendo Js -->
+    <script src="{% static 'libs/kendo/2015.2.624/js/cultures/kendo.culture.es-MX.min.js' %}"></script>
+    <script src="{% static 'libs/kendo/2015.2.624/js/kendo.web.min.js' %}"></script>
+    
+    <!-- Select2 -->
+    <script src="{% static 'theme/plugins/select2/select2.full.min.js' %}"></script>
+    <!-- InputMask -->
+    <script src="{% static 'theme/plugins/input-mask/jquery.inputmask.js' %}"></script>
+    <script src="{% static 'theme/plugins/input-mask/jquery.inputmask.date.extensions.js' %}"></script>
+    <script src="{% static 'theme/plugins/input-mask/jquery.inputmask.extensions.js' %}"></script>
+
+    <!-- bootstrap datepicker -->
+    <script src="{% static 'theme/plugins/datepicker/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'theme/plugins/datepicker/locales/bootstrap-datepicker.es.js' %}"></script>
+    <!-- bootstrap timepicker -->
+    <script src="{% static 'theme/plugins/timepicker/bootstrap-timepicker.js' %}"></script>
+
+    <!-- Moment -->
+    <script src="{% static 'libs/moment.js/2.11.2/moment.min.js' %}"></script>
+    <!-- CoreM -->
+    <script src="{% static 'medicion/captura.js' %}"></script>
+
+{% endblock scripts %}

@@ -1,0 +1,269 @@
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} CoreM - Resumen {% endblock title %}
+
+{% block css %}
+
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{% static 'theme/plugins/select2/select2.min.css' %}"/>
+    
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="{% static 'theme/plugins/datepicker/datepicker3.css' %}">
+    <!-- bootstrap timepicker -->
+    <link rel="stylesheet" href="{% static 'theme/plugins/timepicker/bootstrap-timepicker.css' %}">
+    <!-- CoreM -->
+    <link rel="stylesheet" href="{% static 'grid.css' %}"/>
+
+{% endblock css %}
+
+{% block contenido %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+    <span id="titulo">Resumen</span>
+    <small>Consulta</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i> Inicio</a></li>
+        <li class="active">Resumen</li>
+
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content" id="contenido">
+    <input type="hidden" id="id_odometro_requested" value="{{ id_odometro }}">
+    <div class="row">
+        <div class="col-sm-12">
+            <!-- Filtros -->
+            <div class="box box-solid box-info" id="id_panel">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Filtros</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <form role="form" action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                    <div class="box-body"> 
+                    {% if resultados %}    
+                    <input type="hidden" name="resultados" value="{{ resultados }}" id="resultados">
+                    {% endif %}
+                    <input type="hidden" id="equipos_lista" value="{{ equipos_lista|safe }}">
+                        <div class="row">
+                            <div class="form-group col-sx-12 col-sm-6 col-md-6">        
+                                <label>Equipo:</label>  
+                                {{ form.equipo }}
+                            </div>
+                            <div class="form-group col-sx-12 col-sm-6 col-md-6">
+                                <label>Odómetro:</label>
+                                {{ form.odometro}}                                         
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sx-12 col-sm-12 col-md-12">
+                                <label>Tipo de Odómetro:</label>
+                                {{ form.tipo}}                                         
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <button type="button" id="boton_limpiar" class="btn btn-default">
+                            <i class="fa fa-eraser"></i>
+                            Limpiar
+                        </button>
+                        <button type="submit" name="buscar" value="buscar" id="boton_buscar" class="btn btn-info pull-right">
+                            <i class="fa fa-search"></i>
+                            Buscar
+                        </button>
+                    </div>
+                    <!-- /.box-footer -->
+                
+            </div>
+        </div>
+    </div>
+            <div class="box box-info">
+                <div class="box-header box-header-border">
+                    <h3 class="box-title">Mediciones</h3>
+                    <div class="box-tools pull-right">
+                        <!--<a href="{% url 'activos:reporte_variables_operativas' %}" class="btn bg-olive btn-sm">
+                          <i class="fa fa-file-excel-o"></i>
+                          Exportar
+                        </a>
+                        -->
+                        <button type="submit" name="exportar" id="boton_exportar" class="btn bg-olive btn-sm">
+                        <i class="fa fa-file-excel-o"></i>
+                        Exportar
+                        </button>
+                    </div>
+                </div>
+                </form>  
+
+                <div class="box-body table-responsive"> 
+                    
+                    <table class="table table-bordered table-stripped">
+                        <tr>
+                            <td><strong>Equipos</strong>
+                            </td>
+                            {% for odometro in odometros %}
+                            <td id="{{ odometro.descripcion }}">
+                                <strong>{{ odometro.descripcion }}</strong>
+                                <p class="corem-text-medium">{{ odometro.udm }}</p>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% for record in resultados %}
+                        <tr>
+                            <td><a href="{% url 'activos:mediciones_capturar' record.id_equipo  %} "><strong>{{ record.equipo }}</strong></a></td>
+                            {% for r in record.lista_odometro %}
+                            <td class="odometro" data-equipo="{{ r.equipo }}"data-odometro="{{ r.descripcion}}" data-udm="{{ r.udm }}" data-id-eq="{{ record.id_equipo }}"data-id-odo="{{ r.id_odometro }}" data-acu="{{ r.acumulado }}">
+                                <p class="corem-text-normal">{{ r.medicion }}</p>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                                 
+                    </table>
+                </div>
+            </div> 
+
+
+    <div class="modal fade" id="modal_nuevo" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-default">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Nueva Medición</h4>
+                    <strong><span id="id_udm"></span></strong>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="row"> {% csrf_token %}
+                        <input type="text" class="hidden" id="id_eq" value="">
+                        <input type="text" class="hidden" id="id_odo" value="">
+                        <div class="col-sm-10 col-md-offset-1">
+                            <div id="fecha_contenedor" class="form-group has-warning">
+
+                                <label for="fecha">
+                                    <i class="fa fa-asterisk"></i>
+                                    <label for="id_fecha">Fecha</label>
+                                </label>
+
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text" id="id_fecha" data-date-format="yyyy-mm-dd" class="form-control pull-right">
+                                    
+                                </div>
+                                <span class="help-block hidden" id="fecha_mensaje">Este campo es requerido.</span>
+                                <!-- /.input group -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10 col-md-offset-1">
+                            <div id="hora_contenedor" class="form-group has-warning">
+
+                                <label for="hora">
+                                    <i class="fa fa-asterisk"></i>
+                                    <label for="id_hora">Hora</label>
+                                </label>
+
+                                <div class="input-group bootstrap-timepicker timepicker">
+                                    <div class="input-group-addon">
+                                        <i class="glyphicon glyphicon-time"></i>
+                                    </div>
+                                    <input id="id_hora" type="text" class="form-control input-small pull-right ">
+                                </div>
+
+                                <span class="help-block hidden" id="hora_mensaje">Este campo es requerido.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10 col-md-offset-1">
+                            <div id="lectura_contenedor" class="form-group has-warning">
+                                <label for="lectura">
+                                    <i class="fa fa-asterisk"></i>
+                                    <label for="id_lectura">Lectura</label>
+                                </label>
+                                <input type="number" id="id_lectura" class="form-control">
+                                <span class="help-block hidden" id="lectura_mensaje">Este campo es requerido.</span>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class="col-sm-10 col-md-offset-1">
+                            <div id="hora_contenedor" class="form-group">
+
+                                <label for="hora">
+                                    <label for="id_observaciones">Observaciones</label>
+                                </label>
+
+                                
+                                <input id="id_observaciones" type="text" class="form-control input-sm">
+                                <span class="help-block hidden" id="observaciones_mensaje">Este campo es requerido.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <!--<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                        <i class="fa fa-close"></i>
+                        Cerrar
+                    </button>-->
+                    <button id="boton_historial" type="button" class="btn btn-primary pull-left" >
+                        <i class="fa fa-clock-o"></i>
+                        Ver Historial
+                    </button>
+                    <button type="button" id="boton_guardar" class="btn btn-success">
+                        <i class="fa fa-save"></i>
+                        Guardar
+                    </button>
+                </div>
+            </div>
+                <!-- /.modal-content -->
+        </div>
+    </div>
+
+</section>
+<!-- /. Main content -->
+{% endblock contenido %}
+
+{% block scripts %}
+
+    <!-- Select2 -->
+    <script src="{% static 'theme/plugins/select2/select2.full.min.js' %}"></script>
+    <!-- InputMask -->
+    <script src="{% static 'theme/plugins/input-mask/jquery.inputmask.js' %}"></script>
+    <script src="{% static 'theme/plugins/input-mask/jquery.inputmask.date.extensions.js' %}"></script>
+    <script src="{% static 'theme/plugins/input-mask/jquery.inputmask.extensions.js' %}"></script>
+
+    <!-- bootstrap datepicker -->
+    <script src="{% static 'theme/plugins/datepicker/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'theme/plugins/datepicker/locales/bootstrap-datepicker.es.js' %}"></script>
+    <!-- bootstrap timepicker -->
+    <script src="{% static 'theme/plugins/timepicker/bootstrap-timepicker.js' %}"></script>
+
+    <!-- Moment -->
+    <script src="{% static 'libs/moment.js/2.11.2/moment.min.js' %}"></script>
+    <!-- CoreM -->
+    <script src="{% static 'medicion/grid.js' %}"></script>
+    <script>
+    var array_equipos = {{ equipos_lista }};
+    var array_odometros = {{ odometros_lista }};
+    $('#id_equipo').val(array_equipos);
+    $('#id_equipo').trigger('change');
+    $('#id_odometro').val(array_odometros);
+    $('#id_odometro').trigger('change');
+    //console.log($('#equipos_lista').val());
+    </script>
+
+{% endblock scripts %}

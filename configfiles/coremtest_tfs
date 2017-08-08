@@ -1,0 +1,44 @@
+upstream coremtest_tfs_app {
+	server unix:/webapps/corem/test/run/tfs.sock;
+}
+
+server {
+
+    #listen 80;
+
+    server_name coremtest.tfscorp.com.mx;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    
+    access_log /webapps/corem/test/logs/nginx-acess.log;
+    error_log /webapps/corem/test/logs/nginx-error.log;
+
+    location /static/ {
+        alias /webapps/corem/test/Sitio/static/;
+    }
+
+    location /media/ {
+        alias /webapps/corem/test/Sitio/media/;
+    }
+
+    location / {
+
+	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_set_header Host $http_host;
+
+	proxy_redirect off;
+
+        if (!-f $request_filename) {
+		proxy_pass http://coremtest_tfs_app;
+		break;
+	}
+    }
+
+    # Error pages
+    error_page 500 502 503 504 /500.html;
+    location = /500.html {
+	root /webapps/corem/test/Sitio/home/templates/;	
+    }
+}
+

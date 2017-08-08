@@ -1,0 +1,102 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Mantenimiento CoreM | Log in</title>
+    
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="{% static 'theme/bootstrap/css/bootstrap.min.css' %}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'libs/font-awesome/4.7.0/css/font-awesome.min.css' %}"> 
+    
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'theme/plugins/ionicons/ionicons.min.css' %}">
+    
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'theme/dist/css/AdminLTE.min.css' %}"> 
+    
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{% static 'theme/plugins/iCheck/square/blue.css' %}">
+    
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- CoreM -->
+    <link rel="stylesheet" href="{% static 'login.css' %}"/>
+
+  </head>
+  <body class="hold-transition login-page">
+
+    <div class="login-box app-login-box">
+      <div class="login-logo app-login-logo">
+          <span class="app-login-title">Core<b>M</b></span>
+      </div>
+      <!-- /.login-logo -->
+      <div class="login-box-body app-login-body">
+        <p class="login-box-msg">Bienvenido</p>
+        <form method="post"> {% csrf_token %}
+          <div class="form-group has-feedback">
+            <input type="text" name="username" class="form-control" placeholder="Cuenta" required="true">
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+          </div>
+          <div class="form-group has-feedback">
+            <input type="password" name="password" class="form-control" placeholder="Contraseña" required="true">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+          </div>
+          
+          <div class="row">
+            <div class="col-xs-8">
+            </div>
+            <!-- /.col -->
+            <div class="col-xs-4">
+              <button type="submit" class="btn btn-success btn-block">Ingresar</button>
+            </div>
+            <!-- /.col -->
+          </div>
+        </form>
+        <!-- /.social-auth-links -->
+        <a href="#">¿Olvidaste tu contraseña?</a><br>
+        <!-- <a href="#" class="text-center">Registrar nuevo usuario</a> -->
+      </div>
+      <!-- /.login-box-body -->
+      
+      <div class="row">
+        <div class="col-xs-12">
+
+          <p>
+            {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible alert--center" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+                  {{ message }}
+                </div>
+              {% endfor %}             
+          </p>
+       
+        </div>
+      </div>      
+    </div>
+    <!-- /.login-box -->
+
+    <!-- jQuery 2.2.3 -->
+    <script src="{% static 'theme/plugins/jQuery/jquery-2.2.3.min.js' %}"></script>
+
+    <!-- Bootstrap 3.3.6 -->
+    <script src="{% static 'theme/bootstrap/js/bootstrap.min.js' %}"></script>
+    
+    <!-- iCheck -->
+    <script src="{% static 'theme/plugins/iCheck/icheck.min.js' %}"></script>
+
+  </body>
+</html>

@@ -1,0 +1,122 @@
+.k-grid {
+	font-size: 12px;
+	border-radius: 0 !important;
+}
+
+    .k-grid .k-grid-header {
+    	font-family: Helvetica Neue, sans-serif !important;
+    	font-size: 11px;
+	}
+
+.grid-empy {
+	font-size: 32px;
+	text-align: center;
+	font-family: Helvetica Neue, sans-serif !important;
+}
+
+.grid-header {
+	font-family: Helvetica Neue, sans-serif;
+	font-size: 12px;
+}
+
+.boton_editar {
+	color: white;
+	background-color: #EE8A11;
+	border-color: #D97C06;
+	font-family: Helvetica Neue, sans-serif !important;
+}
+
+.boton_editar:hover {
+	color: white;
+	background-color: #D97C06;
+	font-family: Helvetica Neue, sans-serif !important;
+}
+
+.boton_eliminar {
+	color: white;
+	background-color: #D53326;
+	border-color: #CE2215;
+	font-family: Helvetica Neue, sans-serif !important;
+}
+
+.boton_eliminar:hover {
+	color: white;
+	background-color: #CE2215;
+	font-family: Helvetica Neue, sans-serif !important;
+}
+
+.boton_default {
+	color: white;
+	background-color: #2C78B0;
+	border-color: #286A9B;
+	font-family: Helvetica Neue, sans-serif !important;	
+}
+
+.boton_default:hover {
+	color: white;
+	background-color: #286A9B;
+	font-family: Helvetica Neue, sans-serif !important;
+}
+
+.cell--activo {
+	background-color: #149948;
+	color: white;
+	text-align: center;	
+}
+
+.cell--deshabilitado {
+	background-color: #F2F2F2;
+	color: black;
+	text-align: center;	
+}
+
+.cell--reparacion {
+	background-color: #EE8A11;
+	color: white;
+	text-align: center;	
+}
+
+.cell--disponible {
+	background-color: #AEB404;
+	color: white;
+	text-align: center;		
+}
+
+.cell--terminada {
+	background-color: #16B2EE;
+	color: white;
+	text-align: center;	
+}
+.cell--green {
+	background-color: #149948;
+	color: white;
+	text-align: center;	
+}
+.cell--red {
+	background-color: #B40404;
+	color: white;
+	text-align: center;	
+}
+.cell--yellow {
+	background-color: #AEB404;
+	color: white;
+	text-align: center;	
+}
+
+.grid-body tbody tr th {
+	font-size: 12px !important;
+	font-family: Helvetica Neue, sans-serif !important;	
+}
+
+.grid-body tbody tr td {
+	font-size: 13px !important;
+}
+
+.item--negritas {
+	    color: #333 !important;
+
+}
+
+.item-foto {
+	margin-right: 1em;
+}

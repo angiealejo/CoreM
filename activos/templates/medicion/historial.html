@@ -1,0 +1,213 @@
+
+{% extends 'master.html' %}
+
+{% load static from staticfiles %}
+
+{% load humanize %}
+
+{% block title %} Log de Actividad {% endblock title %}
+
+{% block css %}    
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{% static 'theme/plugins/select2/select2.min.css' %}"/>
+    <!-- bootstrap datetimepicker -->
+    <link rel="stylesheet" href="{% static 'libs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}" />
+    
+    <!-- CoreM -->
+    <link rel="stylesheet" href="{% static 'grid.css' %}"/>
+
+{% endblock css %}
+
+{% block contenido %}
+
+    <!-- Content Header (Page header) -->
+        <section class="content-header">
+        <h1>
+        <span id="titulo">Log</span>
+        <small>Consulta</small>
+        </h1>
+        {% if equipo %} <h4 id="equipo_texto">Equipo: ({{ equipo.tag}}) {{ equipo.descripcion }}</h4>
+            {% endif %}
+        <ol class="breadcrumb">
+            <li><a href="{% url 'dashboards:inicio' %}"><i class="fa fa-home"></i> Inicio</a></li>
+            <li>Mediciones</li>
+            <li class="active"><a href="{% url 'activos:mediciones_capturar' equipo.pk %}">Captura</a></li>
+            <li>Log</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content" id="contenido">
+         <!-- Filtros -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="box box-solid box-info" id="id_panel">
+                <!-- box-header -->
+                <div class="box-header with-border">
+                    <h3 class="box-title">Filtros</h3> 
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <form role="form" action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                    <!-- box body -->
+                    <div class="box-body">     
+                        <div class="row">
+                            <input class="hidden" type="text" name="equipo_id" id="equipo_id" value="{{ equipo.pk }}">
+                            <div class="form-group col-sx-12 col-sm-6 col-md-4">        
+                                <label>Tipo de Equipo</label>  
+                                {{ form.tipo_equipo }}
+                            </div>
+                            <div class="form-group col-sx-12 col-sm-6 col-md-4 select2--fix">        
+                                <label>Equipo</label>  
+                                {{ form.equipo }}
+                                
+                            </div>
+                            <div class="form-group col-sx-12 col-sm-6 col-md-4">        
+                                <label>Tipo de Odómetro</label>  
+                                {{ form.tipo }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sx-12 col-sm-6 col-md-4">        
+                                <label>Fecha Inicio:</label>  
+                                {{ form.fecha_inicio }}
+                            </div>
+                            <div class="form-group col-sx-12 col-sm-6 col-md-4">
+                                <label>Fecha Fin:</label>
+                                {{ form.fecha_fin}}                   
+                            </div>
+                            <div class="form-group col-sx-12 col-sm-6 col-md-4">
+                                <label>{{ form.history_type.label }}</label>
+                                {{ form.history_type}}                   
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <!-- box-footer -->
+                    <div class="box-footer">
+                        <button type="button" id="boton_limpiar" class="btn btn-default">
+                            <i class="fa fa-eraser"></i>
+                            Limpiar
+                        </button>
+                        <button type="submit" name="buscar" id="boton_buscar" class="btn btn-info pull-right">
+                            <i class="fa fa-search"></i>
+                            Buscar
+                        </button>
+                    </div>
+                    <!-- /.box-footer --> 
+                </form>
+            </div>
+        </div>
+    </div>
+        <div class="row">
+            <div class="col-sm-12">
+
+                <div class="box box-info box--table">
+
+                    <div class="box-header">
+                        <h3 class="box-title">Cambios</h3>
+                    </div> <!-- /.box-header -->
+
+                    <div class="box-body no-padding table-responsive">
+
+                        {% if registros %}
+
+                            <table class="table table-striped table-bordered table-hover grid-body">
+                                <!-- Titulos -->
+                                <tr>
+                                    <th>Registro</th> 
+                                    <th>Operación</th> 
+                                    <th>Fecha de Operación</th>
+                                    <th>Lectura después de la operación</th>
+                                    <th width="15%">Observaciones despues de la operación</th>
+                                    <th>Usuario</th>                                   
+                                </tr>
+
+                                <!-- Columnas -->
+                                {% for registro in registros %}
+                                <tr>
+                                    <td> {{ registro.history_object }} </td> 
+                                    <td> 
+                                        {% if  registro.history_type == "+" %}
+                                            <span class="label label-success">Creación</span>
+                                        {% endif %}
+
+                                        {% if  registro.history_type == "~" %}
+                                            <span class="label label-warning">Edición</span>
+                                        {% endif %}
+                                        {% if  registro.history_type == "-" %}
+                                            <span class="label label-danger">Eliminado</span>
+                                        {% endif %}
+                                    </td> 
+                                    <td> {{ registro.history_date |date:"D, d-F-Y G:i" }} </td>
+                                    <td> {{ registro.lectura }} </td> 
+                                    <td width="15%"> {% if registro.observaciones != None %}{{ registro.observaciones }} {% endif %} </td> 
+                                    
+                                    <td class="user-block"> 
+
+                                        {% if registro.history_user.profile.imagen %}
+                                            <img class="img-circle" src="{{ MEDIA_URL }}{{ registro.history_user.profile.imagen }}" alt="User Image">
+                                        {% else %}
+                                            <img class="img-circle img-responsive img-thumbnail" src="{% static 'images/decoradores/no-image-user.jpg' %}" alt="User Image">
+                                        {% endif %}                                         
+
+                                        <span class="username">
+                                            {{ registro.history_user.get_full_name|default_if_none:"" }} ({{ registro.history_user}})
+                                        </span> 
+                                    </td> 
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        {% else %}
+
+                            <div>
+                                <h3 class="grid-empy">No se encontraron registros</h3>
+                            </div>
+                        {% endif %}             
+
+                    </div> <!-- /.box-body -->
+                    <div class="box-footer text-center">
+                        {% if paginated %}
+                        <ul class="pagination pagination-sm no-margin">
+                            {% if registros.has_previous %}
+                                <li><a href="?{{ page_request_var }}={{ registros.previous_page_number }}">&laquo;</a></li>
+                            {% endif %}
+
+                            {% for i in registros.paginator.page_range %}
+                                <li {% if registros.number == i %} class="active" {% endif %}>
+                                    <a href="?page={{i}}&q={{ request.GET.q }}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+
+                            {% if registros.has_next %}
+                                <li><a href="?page={{ registros.next_page_number }}&q={{ request.GET.q }}">&raquo;</a></li>
+                            {% endif %}
+                        </ul>
+                        {% endif %}
+
+                    </div><!-- /.box-footer -->
+                </div> <!-- /.box -->
+            </div>
+        </div>
+
+    </section>
+    <!-- /. Main content -->
+
+{% endblock contenido %}
+
+{% block scripts %}
+
+    <!-- Select2 -->
+    <script src="{% static 'theme/plugins/select2/select2.full.min.js' %}"></script>
+    <!-- Moment -->
+    <script src="{% static 'libs/moment.js/moment-2.18.1/moment.js' %}"></script>
+    <script src="{% static 'libs/moment.js/moment-2.18.1/moment-with-locales.js' %}"></script>
+   <!-- Bootstrap datetimepicker -->
+    <script src="{% static 'libs/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}"></script>
+    
+    <!-- CoreM -->
+    <script src="{% static 'medicion/historial.js' %}"></script>
+
+{% endblock scripts %}

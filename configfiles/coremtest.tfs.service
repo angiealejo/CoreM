@@ -1,0 +1,10 @@
+[Unit]
+Description=coremtest_tfs gunicorn daemon
+
+[Service]
+Type=simple
+User=goxcon
+ExecStart=/webapps/corem/test/run/tfs
+
+[Install]
+WantedBy=multi-user.target

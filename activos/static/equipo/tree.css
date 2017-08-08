@@ -1,0 +1,8 @@
+.label-disponible {
+  background-color: #AEB404;
+}
+
+.label-disponible[href]:hover,
+.label-disponible[href]:focus {
+  background-color: #3071a9;
+}

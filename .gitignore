@@ -1,0 +1,39 @@
+# OS generated files 
+# ---------------------------------------
+.DS_Store
+.Trashes
+Thumbs.db
+prueba.py
+
+# Python Files
+# ---------------------------------------
+*.pyc
+
+# DIRECTORIES
+# ---------------------------------------
+media/*
+static/*
+
+# ARCHIVOS
+# ---------------------------------------
+tst.py
+*.rdb
+*.log
+
+# Configuracion
+# ---------------------------------------
+CoreM/settings.py
+
+# Migraciones
+# ---------------------------------------
+administracion/migrations/*
+dashboards/migrations/*
+activos/migrations/*
+home/migrations/*
+inventarios/migrations/*
+mediciones/migrations/*
+programaciones/migrations/*
+seguridad/migrations/*
+trabajos/migrations/*
+comunicacion/migrations/*
+ti/migrations/*
